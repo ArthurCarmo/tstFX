@@ -118,6 +118,7 @@ void set_M( int i, int j, float _r, float _g, float _b) {
 void show () { glutPostRedisplay(); }
 
 int min(int a, int b) { return a<b?a:b; }
+float minf(float a, float b) { return a<b?a:b; }
 
 int toint(char *s) {
 	int i = 0;
@@ -158,9 +159,9 @@ void * iohandler( void *user_data ) {
 			else if(strcmp(p3, "green") == 0) set_M(_x, _y, 0, 1, 0);
 			else if(strcmp(p3, "blue") == 0)  set_M(_x, _y, 0, 0, 1);
 			else {
-				__r = toint(p3) / 255.0;
-				__g = toint(p4) / 255.0;
-				__b = toint(p5) / 255.0;
+				__r = minf(1.0, (float) toint(p3) / 255.0);
+				__g = minf(1.0, (float) toint(p4) / 255.0);
+				__b = minf(1.0, (float) toint(p5) / 255.0);
 				
 				if(__r < 0 || __g < 0 || __b < 0) continue;
 				set_M(_x, _y, __r, __g, __b);
@@ -174,11 +175,12 @@ void * iohandler( void *user_data ) {
 			else if(strcmp(p2, "green") == 0) for(_y = 0; _y < M_H; _y++) set_M(_x, _y, 0, 1, 0);
 			else if(strcmp(p2, "blue") == 0)  for(_y = 0; _y < M_H; _y++) set_M(_x, _y, 0, 0, 1);
 			else {
-				__r = toint(p2) / 255.0;
-				__g = toint(p3) / 255.0;
-				__b = toint(p4) / 255.0;
+				__r = minf(1.0, (float) toint(p2) / 255.0);
+				__g = minf(1.0, (float) toint(p3) / 255.0);
+				__b = minf(1.0, (float) toint(p4) / 255.0);
 				
 				if(__r < 0 || __g < 0 || __b < 0) continue;
+				
 				for(_y = 0; _y < M_H; _y++) set_M(_x, _y, __r, __g, __b);
 			}
 		} else if(strcmp(cmd, "line") == 0 || strcmp(cmd, "l") == 0) {
@@ -189,9 +191,9 @@ void * iohandler( void *user_data ) {
 			else if(strcmp(p2, "green") == 0) for(_x = 0; _x < M_W; _x++) set_M(_x, _y, 0, 1, 0);
 			else if(strcmp(p2, "blue") == 0)  for(_x = 0; _x < M_W; _x++) set_M(_x, _y, 0, 0, 1);
 			else {
-				__r = toint(p2) / 255.0;
-				__g = toint(p3) / 255.0;
-				__b = toint(p4) / 255.0;
+				__r = minf(1.0, (float) toint(p2) / 255.0);
+				__g = minf(1.0, (float) toint(p3) / 255.0);
+				__b = minf(1.0, (float) toint(p4) / 255.0);
 				
 				if(__r < 0 || __g < 0 || __b < 0) continue;
 				for(_x = 0; _x < M_W; _x++) set_M(_x, _y, __r, __g, __b);
