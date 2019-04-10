@@ -1,2 +1,2 @@
 tstFX : fx.c
-	gcc fx.c -o tstFX -lGLU -lglut -lGL
+	gcc fx.c -o tstFX -lGLU -lglut -lGL -lpthread
