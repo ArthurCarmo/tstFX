@@ -15,37 +15,8 @@ float M[M_MAX][M_MAX][3] = { 0 };
 #define orthoX 120
 #define orthoY 120
 
-int lineL = orthoX / M_W;
-int colL  = orthoY / M_H;
-int rr = 255, gg = 0, bb = 0;
-
-void drawline (float x1, float y1, float x2, float y2)
-{
-    glBegin (GL_LINES);
-    glVertex2f (x1, y1);
-    glVertex2f (x2, y2);
-    glEnd();
-}
-
-void draw_grid(int w, int h) {
-	int i;
-	
-	glColor3f(0.0, 0.0, 0.0);
-	for(i = 0; i <= orthoX; i += lineL) {
-		glBegin(GL_LINES);
-		glVertex2f (0.0, i);
-		glVertex2f (orthoY, i);
-		glEnd();
-	}
-	
-	for(i = 0; i <= orthoY; i += colL) {
-		glBegin(GL_LINES);
-		glVertex2f (i, 0.0);
-		glVertex2f (i, orthoX);
-		glEnd();	
-	}
-
-}
+int lineL = orthoX / M_H;
+int colL  = orthoY / M_W;
 
 void paint( int i, int j, float _r, float _g, float _b) {
 
@@ -81,9 +52,9 @@ void draw_matrix ()  {
 
 	int i, j;
 
-	for(i = 0; i < M_W; i++)
-		for(j = 0; j < M_H; j++)
-			paint(i, j, M[i][j][0], M[i][j][1], M[i][j][2]);
+	for(i = 0; i < M_H; i++)
+		for(j = 0; j < M_W; j++)
+			paint(j, i, M[i][j][0], M[i][j][1], M[i][j][2]);
 
 }
 
@@ -113,6 +84,24 @@ void set_M( int i, int j, float _r, float _g, float _b) {
 	M[i][j][1] = _g;
 	M[i][j][2] = _b;
 	
+}
+
+void set_line_M( int i, float _r, float _g, float _b ) {
+	int j;
+	for(j = 0; j < M_W; j++) {
+		M[i][j][0] = _r;
+		M[i][j][1] = _g;
+		M[i][j][2] = _b;
+	}
+}
+
+void set_col_M( int j, float _r, float _g, float _b ) {
+	int i;
+	for(i = 0; i < M_H; i++) {
+		M[i][j][0] = _r;
+		M[i][j][1] = _g;
+		M[i][j][2] = _b;
+	}		
 }
 
 void show () { glutPostRedisplay(); }
@@ -149,6 +138,7 @@ void * iohandler( void *user_data ) {
 	
 	printf("-> ");
 	while(fgets(buff, 8192, stdin)) {
+		printf("-> ");
 		sscanf(buff, "%s %s %s %s %s %s", cmd, p1, p2, p3, p4, p5);
 		if(strcmp(cmd, "show") == 0) { show(); }
 		else if(strcmp(cmd, "pixel") == 0 || strcmp(cmd, "p") == 0) {
@@ -168,40 +158,40 @@ void * iohandler( void *user_data ) {
 			}
 			
 		} else if(strcmp(cmd, "column") == 0 || strcmp(cmd, "col") == 0 || strcmp(cmd, "c") == 0) { 
-			_x = toint(p1);
-			
-			if(_x < 0) continue;
-			if(strcmp(p2, "red") == 0) 	  for(_y = 0; _y < M_H; _y++) set_M(_x, _y, 1, 0, 0);
-			else if(strcmp(p2, "green") == 0) for(_y = 0; _y < M_H; _y++) set_M(_x, _y, 0, 1, 0);
-			else if(strcmp(p2, "blue") == 0)  for(_y = 0; _y < M_H; _y++) set_M(_x, _y, 0, 0, 1);
-			else {
-				__r = minf(1.0, (float) toint(p2) / 255.0);
-				__g = minf(1.0, (float) toint(p3) / 255.0);
-				__b = minf(1.0, (float) toint(p4) / 255.0);
-				
-				if(__r < 0 || __g < 0 || __b < 0) continue;
-				
-				for(_y = 0; _y < M_H; _y++) set_M(_x, _y, __r, __g, __b);
-			}
-		} else if(strcmp(cmd, "line") == 0 || strcmp(cmd, "l") == 0) {
 			_y = toint(p1);
 			
 			if(_y < 0) continue;
-			if(strcmp(p2, "red") == 0) 	  for(_x = 0; _x < M_W; _x++) set_M(_x, _y, 1, 0, 0);
-			else if(strcmp(p2, "green") == 0) for(_x = 0; _x < M_W; _x++) set_M(_x, _y, 0, 1, 0);
-			else if(strcmp(p2, "blue") == 0)  for(_x = 0; _x < M_W; _x++) set_M(_x, _y, 0, 0, 1);
+			if(strcmp(p2, "red") == 0) 	  set_col_M(_y, 1, 0, 0);
+			else if(strcmp(p2, "green") == 0) set_col_M(_y, 0, 1, 0);
+			else if(strcmp(p2, "blue") == 0)  set_col_M(_y, 0, 0, 1);
 			else {
 				__r = minf(1.0, (float) toint(p2) / 255.0);
 				__g = minf(1.0, (float) toint(p3) / 255.0);
 				__b = minf(1.0, (float) toint(p4) / 255.0);
 				
 				if(__r < 0 || __g < 0 || __b < 0) continue;
-				for(_x = 0; _x < M_W; _x++) set_M(_x, _y, __r, __g, __b);
+				
+				set_col_M(_y, __r, __g, __b);
+			}
+		} else if(strcmp(cmd, "line") == 0 || strcmp(cmd, "l") == 0) {
+			_x = toint(p1);
+		
+			if(_x < 0) continue;
+			if(strcmp(p2, "red") == 0) 	  set_line_M(_x, 1, 0, 0);
+			else if(strcmp(p2, "green") == 0) set_line_M(_x, 0, 1, 0);
+			else if(strcmp(p2, "blue") == 0)  set_line_M(_x, 0, 0, 1);
+			else {
+				__r = minf(1.0, (float) toint(p3) / 255.0);
+				__g = minf(1.0, (float) toint(p4) / 255.0);
+				__b = minf(1.0, (float) toint(p5) / 255.0);
+				
+				if(__r < 0 || __g < 0 || __b < 0) continue;
+				set_line_M(_x,__r, __g, __b);
 			}
 		} else if(strcmp(cmd, "invert") == 0 || strcmp(cmd, "inv") == 0 || strcmp(cmd, "i") == 0) { 
 			if(strcmp(p1, "all") == 0 || strcmp(p1, "a") == 0) { 
-				for(_x = 0; _x < M_W; _x++) 
-					for(_y = 0; _y < M_H; _y++)
+				for(_x = 0; _x < M_H; _x++) 
+					for(_y = 0; _y < M_W; _y++)
 						inv_M(_x, _y);
 			} else if(strcmp(p1, "pixel") == 0 || strcmp(p1, "p") == 0) {
 				_x = toint(p2);
@@ -210,17 +200,16 @@ void * iohandler( void *user_data ) {
 				if(_x < 0 || _y < 0) continue;
 				inv_M(_x, _y);
 			} else if(strcmp(p1, "column") == 0 || strcmp(p1, "col") == 0 || strcmp(p1, "c") == 0) {
-				_x = toint(p2);
-				if(_x < 0) continue;
-				for(_y = 0; _y < M_H; _y++) inv_M(_x, _y);
-			} else if(strcmp(p1, "line") == 0 || strcmp(p1, "l") == 0) {
 				_y = toint(p2);
 				if(_y < 0) continue;
-				for(_x = 0; _x < M_W; _x++) inv_M(_x, _y);
+				for(_x = 0; _x < M_H; _x++) inv_M(_x, _y);
+			} else if(strcmp(p1, "line") == 0 || strcmp(p1, "l") == 0) {
+				_x = toint(p2);
+				if(_x < 0) continue;
+				for(_y = 0; _y < M_W; _y++) inv_M(_x, _y);
 			}
 		} else if(strcmp(cmd, "diagonal") == 0 || strcmp(cmd, "diag") == 0 || strcmp(cmd, "d") == 0) {
 		} else { }
-		printf("-> ");
 	}
 	
 	printf("\nBye!\n");
