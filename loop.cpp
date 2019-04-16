@@ -19,7 +19,7 @@ void loop () {
 	for(int i = 0; i < M_H; i++) {
 		int line  = M_H - i - 1;
 		int start = 0;
-		int end   = M_H - i - 1;
+		int end   = M_H - i;
 		add_line_range(line, start, end, 0, 255, 0);
 		usleep(100000);
 	}
