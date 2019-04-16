@@ -13,9 +13,11 @@ int screenW = 600;
 int screenH = 480;
 float M[M_MAX][M_MAX][3] = { 0 };
 
+int orthoX = 10 * M_W;
+int orthoY = 10 * M_H;
 
-int lineL = orthoX / M_H;
-int colL  = orthoY / M_W;
+int lineL = 10;
+int colL  = 10;
 
 enum menu_opcoes { NONE = 0, PIXEL, LINE, COLUMN, INV, DIAGONAL, CLEAR, ADD, SUB, BYE, FX } main_opt;
 enum menu_opcoes sec_opt;
@@ -154,7 +156,7 @@ void add_col_Mf( int j, float _r, float _g, float _b ) {
 	}
 }
 
-void clear () { int i; for (i = 0; i < M_W; i++) set_line_Mf(i, 0, 0, 0); }
+void clear () { int i; for (i = 0; i < M_H; i++) set_line_Mf(i, 0, 0, 0); }
 
 void set_pixel_M( int i, int j, int _r, int _g, int _b ) {
 	
