@@ -499,3 +499,132 @@ int main (int argc, char *argv[]) {
 	return 0;
 	
 }
+
+
+void set_line_range ( int i, int start, int end, int r, int g, int b ) {
+
+	int j = 0;
+	
+	if(start > end) {
+	
+		j = start;
+		start = end;
+		end = j;
+		
+	}
+	
+	end = min(end, M_W);
+	
+	for(j = start; j < end; j++) {
+		M[i][j][0] = (float) r / 255.0;
+		M[i][j][1] = (float) g / 255.0;
+		M[i][j][2] = (float) b / 255.0;
+	}
+
+}
+
+void set_col_range ( int j, int start, int end, int r, int g, int b ) {
+
+	int i = 0;
+	
+	if(start > end) {
+	
+		j = start;
+		start = end;
+		end = j;
+		
+	}
+	
+	end = min(end, M_H);
+	
+	for(i = start; i < end; i++) {
+		M[i][j][0] = (float) r / 255.0;
+		M[i][j][1] = (float) g / 255.0;
+		M[i][j][2] = (float) b / 255.0;
+	}
+	
+}
+
+void add_line_range ( int i, int start, int end, int r, int g, int b ) {
+	
+	int j = 0;
+	
+	if(start > end) {
+	
+		j = start;
+		start = end;
+		end = j;
+		
+	}
+	
+	end = min(end, M_W);
+	
+	for(j = start; j < end; j++) {
+		M[i][j][0] = minf(1.0, M[i][j][0] + (float) r / 255.0);
+		M[i][j][1] = minf(1.0, M[i][j][1] + (float) g / 255.0);
+		M[i][j][2] = minf(1.0, M[i][j][2] + (float) b / 255.0);
+	}
+
+}
+
+void add_col_range ( int j, int start, int end, int r, int g, int b ) {
+
+	int i = 0;
+	
+	if(start > end) {
+	
+		j = start;
+		start = end;
+		end = j;
+		
+	}
+	
+	end = min(end, M_H);
+	
+	for(i = start; i < end; i++) {
+		M[i][j][0] = minf(1.0, M[i][j][0] + (float) r / 255.0);
+		M[i][j][1] = minf(1.0, M[i][j][1] + (float) g / 255.0);
+		M[i][j][2] = minf(1.0, M[i][j][2] + (float) b / 255.0);
+	}
+	
+}
+
+void inv_line_range ( int i, int start, int end ) {
+	
+	int j;
+	if(start > end) {
+	
+		j = start;
+		start = end;
+		end = j;
+		
+	}
+	end = min(end, M_W);
+	
+	for(j = start; j < end; j++) {
+		M[i][j][0] = 1.0 - M[i][j][0];
+		M[i][j][1] = 1.0 - M[i][j][1];
+		M[i][j][2] = 1.0 - M[i][j][2];
+	}
+
+}
+
+void inv_col_range ( int j, int start, int end ) {
+
+	int i = 0;
+	if(start > end) {
+	
+		j = start;
+		start = end;
+		end = j;
+		
+	}
+	end = min(end, M_H);
+	
+	for(i = start; i < end; i++) {
+		M[i][j][0] = 1.0 - M[i][j][0];
+		M[i][j][1] = 1.0 - M[i][j][1];
+		M[i][j][2] = 1.0 - M[i][j][2];
+	}
+
+}

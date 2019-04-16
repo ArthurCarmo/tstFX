@@ -10,9 +10,17 @@ void setup () {
 }
 
 void loop () {
-
+	
 	for(int j = 0; j < M_W; j++) {
-		add_col_M(j, 255, 0, 0);
+		set_col_range(j, 0, j+1, 255, 0, 0);
+		usleep(100000);
+	}
+	
+	for(int i = 0; i < M_H; i++) {
+		int line  = M_H - i - 1;
+		int start = 0;
+		int end   = M_H - i - 1;
+		add_line_range(line, start, end, 0, 255, 0);
 		usleep(100000);
 	}
 		
