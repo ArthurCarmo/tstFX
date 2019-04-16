@@ -1,4 +1,4 @@
-loop.c - Função que fica em loop para criar o efeito
+loop.cpp - Função que fica em loop para criar o efeito
 conf.h - Configurações de tamanho da matriz
 fx.c   - Gerencia o grid e a thread de efeitos
 
