@@ -7,17 +7,12 @@
 #include <GL/glut.h>
 #include <GL/freeglut.h>
 
-#define M_MAX 1000
+#include "conf.h"
 
 int screenW = 600;
 int screenH = 480;
 float M[M_MAX][M_MAX][3] = { 0 };
 
-#define M_W 12
-#define M_H 12
-
-#define orthoX 120
-#define orthoY 120
 
 int lineL = orthoX / M_H;
 int colL  = orthoY / M_W;
@@ -25,7 +20,11 @@ int colL  = orthoY / M_W;
 enum menu_opcoes { NONE = 0, PIXEL, LINE, COLUMN, INV, DIAGONAL, CLEAR, ADD, SUB, FX } main_opt;
 enum menu_opcoes sec_opt;
 
-void paint( int i, int j, float _r, float _g, float _b) {
+int min(int a, int b) { return a<b?a:b; }
+float minf(float a, float b) { return a<b?a:b; }
+float maxf(float a, float b) { return a>b?a:b; }
+
+void paint( int i, int j, float _r, float _g, float _b ) {
 
 	int geo_i = i * lineL;
 	int geo_j = j * colL;
@@ -76,17 +75,36 @@ void refresh_screen(void) {
 	
 	glColor3f(0.0f,0.0f,0.0f);
 	glutSwapBuffers();
-	glutPostRedisplay();
 	
+	glutPostRedisplay();
 }
 
-void inv_M( int i, int j ) {
+void inv_pixel_M( int i, int j ) {
 	M[i][j][0] = 1 - M[i][j][0];
 	M[i][j][1] = 1 - M[i][j][1];
 	M[i][j][2] = 1 - M[i][j][2];
 }
 
-void set_M( int i, int j, float _r, float _g, float _b) {
+void inv_line_M ( int i ) {
+	int j;
+	for(j = 0; j < M_W; j++) {
+		M[i][j][0] = 1 - M[i][j][0];
+		M[i][j][1] = 1 - M[i][j][1];
+		M[i][j][2] = 1 - M[i][j][2];
+	}
+}
+
+void inv_col_M (int j ) {
+	int i;
+	for(i = 0; i < M_H; i++) {
+		M[i][j][0] = 1 - M[i][j][0];
+		M[i][j][1] = 1 - M[i][j][1];
+		M[i][j][2] = 1 - M[i][j][2];
+	}
+}
+
+
+void set_pixel_Mf( int i, int j, float _r, float _g, float _b) {
 	
 	M[i][j][0] = _r;
 	M[i][j][1] = _g;
@@ -94,7 +112,7 @@ void set_M( int i, int j, float _r, float _g, float _b) {
 	
 }
 
-void set_line_M( int i, float _r, float _g, float _b ) {
+void set_line_Mf( int i, float _r, float _g, float _b ) {
 	int j;
 	for(j = 0; j < M_W; j++) {
 		M[i][j][0] = _r;
@@ -103,7 +121,7 @@ void set_line_M( int i, float _r, float _g, float _b ) {
 	}
 }
 
-void set_col_M( int j, float _r, float _g, float _b ) {
+void set_col_Mf( int j, float _r, float _g, float _b ) {
 	int i;
 	for(i = 0; i < M_H; i++) {
 		M[i][j][0] = _r;
@@ -112,14 +130,13 @@ void set_col_M( int j, float _r, float _g, float _b ) {
 	}		
 }
 
+void add_pixel_Mf( int i, int j, float _r, float _g, float _b ) {
+	M[i][j][0] = minf(1.0, M[i][j][0] + _r);
+	M[i][j][1] = minf(1.0, M[i][j][1] + _g);
+	M[i][j][2] = minf(1.0, M[i][j][2] + _b);
+}
 
-void clear () { int i = 0; for (i = 0; i < M_W; i++) set_line_M(i, 0, 0, 0); }
-
-int min(int a, int b) { return a<b?a:b; }
-float minf(float a, float b) { return a<b?a:b; }
-float maxf(float a, float b) { return a>b?a:b; }
-
-void add_line_M( int i, float _r, float _g, float _b ) {
+void add_line_Mf( int i, float _r, float _g, float _b ) {
 	int j = 0;
 	for(j = 0; j < M_W; j++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + _r);
@@ -128,7 +145,7 @@ void add_line_M( int i, float _r, float _g, float _b ) {
 	}
 }
 
-void add_col_M( int j, float _r, float _g, float _b ) {
+void add_col_Mf( int j, float _r, float _g, float _b ) {
 	int i = 0;
 	for(i = 0; i < M_H; i++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + _r);
@@ -137,10 +154,56 @@ void add_col_M( int j, float _r, float _g, float _b ) {
 	}
 }
 
-void add_pixel_M( int i, int j, float _r, float _g, float _b ) {
-	M[i][j][0] = minf(1.0, M[i][j][0] + _r);
-	M[i][j][1] = minf(1.0, M[i][j][1] + _g);
-	M[i][j][2] = minf(1.0, M[i][j][2] + _b);
+void clear () { int i; for (i = 0; i < M_W; i++) set_line_Mf(i, 0, 0, 0); }
+
+void set_pixel_M( int i, int j, int _r, int _g, int _b ) {
+	
+	M[i][j][0] = (float) _r / 255.0;
+	M[i][j][1] = (float) _g / 255.0;
+	M[i][j][2] = (float) _b / 255.0;
+	
+}
+
+void set_line_M( int i, int _r, int _g, int _b ) {
+	int j;
+	for(j = 0; j < M_W; j++) {
+		M[i][j][0] = (float) _r / 255.0;
+		M[i][j][1] = (float) _g / 255.0;
+		M[i][j][2] = (float) _b / 255.0;
+	}
+}
+
+void set_col_M( int j, int _r, int _g, int _b ) {
+	int i;
+	for(i = 0; i < M_H; i++) {
+		M[i][j][0] = (float) _r / 255.0;
+		M[i][j][1] = (float) _g / 255.0;
+		M[i][j][2] = (float) _b / 255.0;
+	}		
+}
+
+void add_pixel_M( int i, int j, int _r, int _g, int _b ) {
+	M[i][j][0] = minf(1.0, M[i][j][0] + (float) _r / 255.0);
+	M[i][j][1] = minf(1.0, M[i][j][1] + (float) _g / 255.0);
+	M[i][j][2] = minf(1.0, M[i][j][2] + (float) _b / 255.0);
+}
+
+void add_line_M( int i, int _r, int _g, int _b ) {
+	int j = 0;
+	for(j = 0; j < M_W; j++) {
+		M[i][j][0] = minf(1.0, M[i][j][0] + (float) _r / 255.0);
+		M[i][j][1] = minf(1.0, M[i][j][1] + (float) _g / 255.0);
+		M[i][j][2] = minf(1.0, M[i][j][2] + (float) _b / 255.0);
+	}
+}
+
+void add_col_M( int j, int _r, int _g, int _b ) {
+	int i = 0;
+	for(i = 0; i < M_H; i++) {
+		M[i][j][0] = minf(1.0, M[i][j][0] + (float) _r / 255.0);
+		M[i][j][1] = minf(1.0, M[i][j][1] + (float) _g / 255.0);
+		M[i][j][2] = minf(1.0, M[i][j][2] + (float) _b / 255.0);
+	}
 }
 
 int toint(char *s) {
@@ -223,7 +286,14 @@ void get_colors(char *p1, char *p2, char *p3, float *r, float *g, float *b) {
 	
 }
 
-void * fx_loop (void *);
+void loop ();
+void * fx_loop( void *user_data ) {
+	int *playing = (int *) user_data;
+	sleep(1);
+	while( *playing ) loop();
+	
+	return NULL;
+}
 
 void * io_handler( void *user_data ) {
 	
@@ -234,6 +304,7 @@ void * io_handler( void *user_data ) {
 	char p3[256];
 	char p4[256];
 	char p5[256];
+	char p6[256];
 	int _x, _y;
 	float __r;
 	float __g;
@@ -245,7 +316,7 @@ void * io_handler( void *user_data ) {
 	printf("-> ");
 	while(fgets(buff, 8192, stdin)) {
 		printf("-> ");
-		sscanf(buff, "%s %s %s %s %s %s", cmd, p1, p2, p3, p4, p5);
+		sscanf(buff, "%s %s %s %s %s %s %s", cmd, p1, p2, p3, p4, p5, p6);
 		switch(cmd_val(cmd)) {
 		
 			case CLEAR	: clear(); break;
@@ -257,7 +328,7 @@ void * io_handler( void *user_data ) {
 				get_colors(p3, p4, p5, &__r, &__g, &__b);
 
 				if(__r < 0 || __g < 0 || __b < 0) continue;
-				set_M(_x, _y, __r, __g, __b);
+				set_pixel_Mf(_x, _y, __r, __g, __b);
 
 				break;
 			
@@ -269,7 +340,7 @@ void * io_handler( void *user_data ) {
 				get_colors(p2, p3, p4, &__r, &__g, &__b);
 				
 				if(__r < 0 || __g < 0 || __b < 0) continue;
-				set_col_M(_y, __r, __g, __b);
+				set_col_Mf(_y, __r, __g, __b);
 				
 				break;
 			
@@ -281,7 +352,7 @@ void * io_handler( void *user_data ) {
 				get_colors(p2, p3, p4, &__r, &__g, &__b);
 					
 				if(__r < 0 || __g < 0 || __b < 0) continue;
-				set_line_M(_x,__r, __g, __b);
+				set_line_Mf(_x,__r, __g, __b);
 
 				break;
 				
@@ -289,21 +360,23 @@ void * io_handler( void *user_data ) {
 				if(strcmp(p1, "all") == 0 || strcmp(p1, "a") == 0) { 
 					for(_x = 0; _x < M_H; _x++) 
 						for(_y = 0; _y < M_W; _y++)
-							inv_M(_x, _y);
+							inv_pixel_M(_x, _y);
 				} else if(strcmp(p1, "pixel") == 0 || strcmp(p1, "p") == 0) {
 					_x = toint(p2);
 					_y = toint(p3);
 					
 					if(_x < 0 || _y < 0) continue;
-					inv_M(_x, _y);
+					inv_pixel_M(_x, _y);
+					
 				} else if(strcmp(p1, "column") == 0 || strcmp(p1, "col") == 0 || strcmp(p1, "c") == 0) {
 					_y = toint(p2);
 					if(_y < 0) continue;
-					for(_x = 0; _x < M_H; _x++) inv_M(_x, _y);
+					inv_col_M(_y);
+					
 				} else if(strcmp(p1, "line") == 0 || strcmp(p1, "l") == 0) {
 					_x = toint(p2);
 					if(_x < 0) continue;
-					for(_y = 0; _y < M_W; _y++) inv_M(_x, _y);
+					inv_line_M(_x);
 				}
 				break;
 				
@@ -313,10 +386,10 @@ void * io_handler( void *user_data ) {
 					_y = toint(p3);
 					if(_x < 0 || _y < 0) continue;
 					
-					get_colors(p3, p4, p5, &__r, &__g, &__b);
+					get_colors(p4, p5, p6, &__r, &__g, &__b);
 					
 					if(__r < 0 || __g < 0 || __b < 0) continue;				
-					add_pixel_M(_x, _y, __r, __g, __b);
+					add_pixel_Mf(_x, _y, __r, __g, __b);
 										
 					
 				} else if(strcmp(p1, "column") == 0 || strcmp(p1, "col") == 0 || strcmp(p1, "c") == 0) {
@@ -326,7 +399,7 @@ void * io_handler( void *user_data ) {
 					get_colors(p3, p4, p5, &__r, &__g, &__b);
 					
 					if(__r < 0 || __g < 0 || __b < 0) continue;				
-					add_col_M(_y, __r, __g, __b);
+					add_col_Mf(_y, __r, __g, __b);
 					
 					
 				} else if(strcmp(p1, "line") == 0 || strcmp(p1, "l") == 0) {
@@ -336,7 +409,7 @@ void * io_handler( void *user_data ) {
 					get_colors(p3, p4, p5, &__r, &__g, &__b);
 										
 					if(__r < 0 || __g < 0 || __b < 0) continue;				
-					add_line_M(_x, __r, __g, __b);
+					add_line_Mf(_x, __r, __g, __b);
 					
 				}
 				
@@ -368,27 +441,11 @@ void * io_handler( void *user_data ) {
 		pthread_join(fx_thread, NULL);
 	}
 	printf("\nBye!\n");
+
 	glutLeaveMainLoop();
+	return NULL;
 }
 
-void * fx_loop( void *user_data ) {
-	int *playing = (int *) user_data;
-	sleep(1);
-	while( *playing ) {
-		int i, j;
-		int x = 2;
-		clear();
-		for(i = 0; i < M_H; i++) {
-			add_col_M(i, 1, 0, 0);
-			usleep(100000);
-		}
-		
-	} 
-	
-	clear();
-	
-	return NULL;	
-}
 
 int main (int argc, char *argv[]) {
 	
