@@ -3,7 +3,9 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <unistd.h>
+
 #include <GL/glut.h>
+#include <GL/freeglut.h>
 
 #define M_MAX 1000
 
@@ -20,7 +22,7 @@ float M[M_MAX][M_MAX][3] = { 0 };
 int lineL = orthoX / M_H;
 int colL  = orthoY / M_W;
 
-enum menu_opcoes { NONE = 0, PIXEL, LINE, COLUMN, INV, DIAGONAL, SHOW, CLEAR, ADD } main_opt;
+enum menu_opcoes { NONE = 0, PIXEL, LINE, COLUMN, INV, DIAGONAL, CLEAR, ADD, SUB, FX } main_opt;
 enum menu_opcoes sec_opt;
 
 void paint( int i, int j, float _r, float _g, float _b) {
@@ -111,7 +113,6 @@ void set_col_M( int j, float _r, float _g, float _b ) {
 }
 
 
-void show () { glutPostRedisplay(); }
 void clear () { int i = 0; for (i = 0; i < M_W; i++) set_line_M(i, 0, 0, 0); }
 
 int min(int a, int b) { return a<b?a:b; }
@@ -156,7 +157,6 @@ int toint(char *s) {
 }
 
 enum menu_opcoes cmd_val(char *cmd) {
-	if(strcmp(cmd, "show") == 0)	return main_opt = SHOW;
 
 	if(strcmp(cmd, "clean") == 0 
 	|| strcmp(cmd, "clear") == 0
@@ -177,14 +177,53 @@ enum menu_opcoes cmd_val(char *cmd) {
 	|| strcmp(cmd, "i") == 0)	return main_opt = INV;
 
 	if(strcmp(cmd, "add") == 0)	return main_opt = ADD;
+	if(strcmp(cmd, "sub") == 0)	return main_opt = SUB;
 
 	if(strcmp(cmd, "diagonal") == 0
 	|| strcmp(cmd, "diag") == 0
 	|| strcmp(cmd, "d") == 0)	return main_opt = DIAGONAL;
 	
+	if(strcmp(cmd, "fx") == 0
+	|| strcmp(cmd, "effect") == 0)	return main_opt = FX;
+	
 	return main_opt = NONE;
 	
 }
+
+void get_colors(char *p1, char *p2, char *p3, float *r, float *g, float *b) {
+	if(strcmp(p1, "red") == 0) {
+		*r = 1.0;
+		*g = 0.0;
+		*b = 0.0;
+		return;
+	}
+	
+	if(strcmp(p1, "green") == 0) {
+		*r = 0.0;
+		*g = 1.0;
+		*b = 0.0;
+		return;
+	}
+	else if(strcmp(p1, "blue") == 0) {
+		*r = 0.0;
+		*g = 0.0;
+		*b = 1.0;
+		return;
+	}
+	else if(strcmp(p1, "black") == 0 || strcmp(p1, "off") == 0) {
+		*r = 0.0;
+		*g = 0.0;
+		*b = 0.0;
+		return ;
+	}
+
+	*r = minf(1.0, (float) toint(p1) / 255.0);
+	*g = minf(1.0, (float) toint(p2) / 255.0);
+	*b = minf(1.0, (float) toint(p3) / 255.0);
+	
+}
+
+void * fx_loop (void *);
 
 void * io_handler( void *user_data ) {
 	
@@ -200,71 +239,56 @@ void * io_handler( void *user_data ) {
 	float __g;
 	float __b;
 	
+	pthread_t fx_thread;
+	int playing = 0;
+	
 	printf("-> ");
 	while(fgets(buff, 8192, stdin)) {
 		printf("-> ");
 		sscanf(buff, "%s %s %s %s %s %s", cmd, p1, p2, p3, p4, p5);
 		switch(cmd_val(cmd)) {
-			case SHOW	: show(); break;
+		
 			case CLEAR	: clear(); break;
 			case PIXEL	:
 				_x = toint(p1);
 				_y = toint(p2);
 				if(_x < 0 || _y < 0) continue;
-				if(strcmp(p3, "red") == 0) 	  set_M(_x, _y, 1, 0, 0);
-				else if(strcmp(p3, "green") == 0) set_M(_x, _y, 0, 1, 0);
-				else if(strcmp(p3, "blue") == 0)  set_M(_x, _y, 0, 0, 1);
-				else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_M(_x, _y, 0, 0, 0);
-				else {
-					__r = minf(1.0, (float) toint(p3) / 255.0);
-					__g = minf(1.0, (float) toint(p4) / 255.0);
-					__b = minf(1.0, (float) toint(p5) / 255.0);
-					
-					if(__r < 0 || __g < 0 || __b < 0) continue;
-					set_M(_x, _y, __r, __g, __b);
-				}
+				
+				get_colors(p3, p4, p5, &__r, &__g, &__b);
+
+				if(__r < 0 || __g < 0 || __b < 0) continue;
+				set_M(_x, _y, __r, __g, __b);
+
 				break;
 			
 			case COLUMN	:
 				_y = toint(p1);
 				
 				if(_y < 0) continue;
-				if(strcmp(p2, "red") == 0) 	  set_col_M(_y, 1, 0, 0);
-				else if(strcmp(p2, "green") == 0) set_col_M(_y, 0, 1, 0);
-				else if(strcmp(p2, "blue") == 0)  set_col_M(_y, 0, 0, 1);
-				else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_col_M(_y, 0, 0, 0);
-				else {
-					__r = minf(1.0, (float) toint(p2) / 255.0);
-					__g = minf(1.0, (float) toint(p3) / 255.0);
-					__b = minf(1.0, (float) toint(p4) / 255.0);
-					
-					if(__r < 0 || __g < 0 || __b < 0) continue;
-					set_col_M(_y, __r, __g, __b);
-				}
+				
+				get_colors(p2, p3, p4, &__r, &__g, &__b);
+				
+				if(__r < 0 || __g < 0 || __b < 0) continue;
+				set_col_M(_y, __r, __g, __b);
+				
 				break;
 			
 			case LINE	:
 				_x = toint(p1);
 			
 				if(_x < 0) continue;
-				if(strcmp(p2, "red") == 0) 	  set_line_M(_x, 1, 0, 0);
-				else if(strcmp(p2, "green") == 0) set_line_M(_x, 0, 1, 0);
-				else if(strcmp(p2, "blue") == 0)  set_line_M(_x, 0, 0, 1);
-				else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_line_M(_x, 0, 0, 0);
-				else {
-					__r = minf(1.0, (float) toint(p3) / 255.0);
-					__g = minf(1.0, (float) toint(p4) / 255.0);
-					__b = minf(1.0, (float) toint(p5) / 255.0);
+				
+				get_colors(p2, p3, p4, &__r, &__g, &__b);
 					
-					if(__r < 0 || __g < 0 || __b < 0) continue;
-					set_line_M(_x,__r, __g, __b);
-				}
+				if(__r < 0 || __g < 0 || __b < 0) continue;
+				set_line_M(_x,__r, __g, __b);
+
 				break;
 				
 			case INV	:
 				if(strcmp(p1, "all") == 0 || strcmp(p1, "a") == 0) { 
 					for(_x = 0; _x < M_H; _x++) 
-							for(_y = 0; _y < M_W; _y++)
+						for(_y = 0; _y < M_W; _y++)
 							inv_M(_x, _y);
 				} else if(strcmp(p1, "pixel") == 0 || strcmp(p1, "p") == 0) {
 					_x = toint(p2);
@@ -288,54 +312,48 @@ void * io_handler( void *user_data ) {
 					_x = toint(p2);
 					_y = toint(p3);
 					if(_x < 0 || _y < 0) continue;
-					if(strcmp(p3, "red") == 0) 	  add_pixel_M(_x, _y, 1, 0, 0);
-					else if(strcmp(p3, "green") == 0) add_pixel_M(_x, _y, 0, 1, 0);
-					else if(strcmp(p3, "blue") == 0)  add_pixel_M(_x, _y, 0, 0, 1);
-					else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  add_pixel_M(_x, _y, 0, 0, 0);
-					else {
-						__r = minf(1.0, (float) toint(p3) / 255.0);
-						__g = minf(1.0, (float) toint(p4) / 255.0);
-						__b = minf(1.0, (float) toint(p5) / 255.0);
 					
-						if(__r < 0 || __g < 0 || __b < 0) continue;				
-						add_pixel_M(_x, _y, __r, __g, __b);
-					}
+					get_colors(p3, p4, p5, &__r, &__g, &__b);
 					
+					if(__r < 0 || __g < 0 || __b < 0) continue;				
+					add_pixel_M(_x, _y, __r, __g, __b);
+										
 					
 				} else if(strcmp(p1, "column") == 0 || strcmp(p1, "col") == 0 || strcmp(p1, "c") == 0) {
 					_y = toint(p2);
 					if(_y < 0) continue;
-					if(strcmp(p3, "red") == 0) 	  add_col_M(_y, 1, 0, 0);
-					else if(strcmp(p3, "green") == 0) add_col_M(_y, 0, 1, 0);
-					else if(strcmp(p3, "blue") == 0)  add_col_M(_y, 0, 0, 1);
-					else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  add_col_M(_x, 0, 0, 0);
-					else {
-						__r = minf(1.0, (float) toint(p3) / 255.0);
-						__g = minf(1.0, (float) toint(p4) / 255.0);
-						__b = minf(1.0, (float) toint(p5) / 255.0);
 					
-						if(__r < 0 || __g < 0 || __b < 0) continue;				
-						add_col_M(_y, __r, __g, __b);
-					}
+					get_colors(p3, p4, p5, &__r, &__g, &__b);
+					
+					if(__r < 0 || __g < 0 || __b < 0) continue;				
+					add_col_M(_y, __r, __g, __b);
+					
 					
 				} else if(strcmp(p1, "line") == 0 || strcmp(p1, "l") == 0) {
 					_x = toint(p2);
 					if(_x < 0) continue;
-					if(strcmp(p3, "red") == 0) 	  add_line_M(_x, 1, 0, 0);
-					else if(strcmp(p3, "green") == 0) add_line_M(_x, 0, 1, 0);
-					else if(strcmp(p3, "blue") == 0)  add_line_M(_x, 0, 0, 1);
-					else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  add_line_M(_x, 0, 0, 0);
-					else {
-						__r = minf(1.0, (float) toint(p3) / 255.0);
-						__g = minf(1.0, (float) toint(p4) / 255.0);
-						__b = minf(1.0, (float) toint(p5) / 255.0);
 					
-						if(__r < 0 || __g < 0 || __b < 0) continue;				
-						add_line_M(_x, __r, __g, __b);
-					}
+					get_colors(p3, p4, p5, &__r, &__g, &__b);
+										
+					if(__r < 0 || __g < 0 || __b < 0) continue;				
+					add_line_M(_x, __r, __g, __b);
 					
 				}
 				
+				break;
+				
+			case FX		:
+				if(strcmp(p1, "start") == 0 || strcmp(p1, "begin") == 0) {
+					if(!playing) {
+						playing = 1;
+						pthread_create(&fx_thread, NULL, fx_loop, (void *) &playing);
+					}
+				} else {
+					if(playing) {
+						playing = 0;
+						pthread_join(fx_thread, NULL);
+					}
+				}			
 				break;
 
 			case DIAGONAL	:
@@ -345,23 +363,29 @@ void * io_handler( void *user_data ) {
 		}
 	
 	}
+	if(playing) {
+		playing = 0;
+		pthread_join(fx_thread, NULL);
+	}
 	printf("\nBye!\n");
-	exit (0);
-
+	glutLeaveMainLoop();
 }
 
 void * fx_loop( void *user_data ) {
-	int i, j; 
+	int *playing = (int *) user_data;
 	sleep(1);
-	while( 1 ) {
+	while( *playing ) {
+		int i, j;
+		int x = 2;
 		clear();
 		for(i = 0; i < M_H; i++) {
 			add_col_M(i, 1, 0, 0);
-			show();
 			usleep(100000);
 		}
 		
 	} 
+	
+	clear();
 	
 	return NULL;	
 }
@@ -371,12 +395,9 @@ int main (int argc, char *argv[]) {
 	glutInit(&argc, argv);
 
 	pthread_t io_thread;
-	pthread_t fx_thread;
+	pthread_create(&io_thread, NULL, io_handler, NULL);
 	
 	main_opt = NONE;
-	
-	pthread_create(&io_thread, NULL, io_handler, NULL);
-	pthread_create(&fx_thread, NULL, fx_loop, NULL);
 
 	// Dois buffers, janela 600x450
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -393,6 +414,8 @@ int main (int argc, char *argv[]) {
 	
 	glutDisplayFunc(refresh_screen);
 	glutMainLoop();
+
+	pthread_join(io_thread, NULL);
 
 	return 0;
 	
