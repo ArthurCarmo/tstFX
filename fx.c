@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <pthread.h>
+#include <sys/time.h>
+#include <unistd.h>
 #include <GL/glut.h>
 
 #define M_MAX 1000
@@ -69,6 +71,7 @@ void refresh_screen(void) {
 	
 	glColor3f(0.0f,0.0f,0.0f);
 	glutSwapBuffers();
+	glutPostRedisplay();
 	
 }
 
@@ -105,6 +108,7 @@ void set_col_M( int j, float _r, float _g, float _b ) {
 }
 
 void show () { glutPostRedisplay(); }
+void clear () { int i = 0; for (i = 0; i < M_W; i++) set_line_M(i, 0, 0, 0); }
 
 int min(int a, int b) { return a<b?a:b; }
 float minf(float a, float b) { return a<b?a:b; }
@@ -122,7 +126,7 @@ int toint(char *s) {
 	return min(M_MAX-1, r);
 }
 
-void * iohandler( void *user_data ) {
+void * io_handler( void *user_data ) {
 	
 	char buff[8192];
 	char cmd[2048];
@@ -141,6 +145,7 @@ void * iohandler( void *user_data ) {
 		printf("-> ");
 		sscanf(buff, "%s %s %s %s %s %s", cmd, p1, p2, p3, p4, p5);
 		if(strcmp(cmd, "show") == 0) { show(); }
+		else if(strcmp(cmd, "clean") == 0 || strcmp(cmd, "clear") == 0 || strcmp(cmd, "reset") == 0) { clear(); }
 		else if(strcmp(cmd, "pixel") == 0 || strcmp(cmd, "p") == 0) {
 			_x = toint(p1);
 			_y = toint(p2);
@@ -148,6 +153,7 @@ void * iohandler( void *user_data ) {
 			if(strcmp(p3, "red") == 0) 	  set_M(_x, _y, 1, 0, 0);
 			else if(strcmp(p3, "green") == 0) set_M(_x, _y, 0, 1, 0);
 			else if(strcmp(p3, "blue") == 0)  set_M(_x, _y, 0, 0, 1);
+			else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_line_M(_x, 0, 0, 0);
 			else {
 				__r = minf(1.0, (float) toint(p3) / 255.0);
 				__g = minf(1.0, (float) toint(p4) / 255.0);
@@ -164,6 +170,7 @@ void * iohandler( void *user_data ) {
 			if(strcmp(p2, "red") == 0) 	  set_col_M(_y, 1, 0, 0);
 			else if(strcmp(p2, "green") == 0) set_col_M(_y, 0, 1, 0);
 			else if(strcmp(p2, "blue") == 0)  set_col_M(_y, 0, 0, 1);
+			else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_line_M(_x, 0, 0, 0);
 			else {
 				__r = minf(1.0, (float) toint(p2) / 255.0);
 				__g = minf(1.0, (float) toint(p3) / 255.0);
@@ -180,6 +187,7 @@ void * iohandler( void *user_data ) {
 			if(strcmp(p2, "red") == 0) 	  set_line_M(_x, 1, 0, 0);
 			else if(strcmp(p2, "green") == 0) set_line_M(_x, 0, 1, 0);
 			else if(strcmp(p2, "blue") == 0)  set_line_M(_x, 0, 0, 1);
+			else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_line_M(_x, 0, 0, 0);
 			else {
 				__r = minf(1.0, (float) toint(p3) / 255.0);
 				__g = minf(1.0, (float) toint(p4) / 255.0);
@@ -217,12 +225,31 @@ void * iohandler( void *user_data ) {
 
 }
 
+void * fx_loop( void *user_data ) {
+	int i, j; 
+	sleep(1);
+	while( 1 ) {
+		clear();
+		for(i = 0; i < M_H; i++) {
+			set_col_M(i, 1, 0, 0);
+			show();
+			usleep(100000);
+		}
+		
+	} 
+	
+	return NULL;	
+}
+
 int main (int argc, char *argv[]) {
 	
 	glutInit(&argc, argv);
 
 	pthread_t io_thread;
-	pthread_create(&io_thread, NULL, iohandler, NULL);
+	pthread_t fx_thread;
+	
+	pthread_create(&io_thread, NULL, io_handler, NULL);
+	pthread_create(&fx_thread, NULL, fx_loop, NULL);
 
 	// Dois buffers, janela 600x450
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
