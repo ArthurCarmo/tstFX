@@ -1,6 +1,9 @@
 #include "fx.c"
 
 void setup () {
+	
+	M_W = 12; // width
+	M_H = 12; // height
 
 	clear();
 	

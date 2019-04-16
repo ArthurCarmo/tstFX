@@ -7,14 +7,17 @@
 #include <GL/glut.h>
 #include <GL/freeglut.h>
 
-#include "conf.h"
+#define M_MAX 1000
 
 int screenW = 600;
 int screenH = 480;
 float M[M_MAX][M_MAX][3] = { 0 };
 
-int orthoX = 10 * M_W;
-int orthoY = 10 * M_H;
+int M_W = 12;
+int M_H = 12;
+
+int orthoX;
+int orthoY;
 
 int lineL = 10;
 int colL  = 10;
@@ -461,6 +464,12 @@ void * io_handler( void *user_data ) {
 
 
 int main (int argc, char *argv[]) {
+	
+	
+	setup();
+	
+	orthoX = 10 * M_W;
+	orthoY = 10 * M_H;
 	
 	glutInit(&argc, argv);
 

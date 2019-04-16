@@ -1,4 +1,4 @@
-tstFX : loop.c fx.c conf.h
+tstFX : loop.c fx.c
 	gcc loop.c -o tstFX -lGLU -lglut -lGL -lpthread
 	
 
