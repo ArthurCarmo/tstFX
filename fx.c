@@ -20,6 +20,9 @@ float M[M_MAX][M_MAX][3] = { 0 };
 int lineL = orthoX / M_H;
 int colL  = orthoY / M_W;
 
+enum menu_opcoes { NONE = 0, PIXEL, LINE, COLUMN, INV, DIAGONAL, SHOW, CLEAR, ADD } main_opt;
+enum menu_opcoes sec_opt;
+
 void paint( int i, int j, float _r, float _g, float _b) {
 
 	int geo_i = i * lineL;
@@ -107,11 +110,37 @@ void set_col_M( int j, float _r, float _g, float _b ) {
 	}		
 }
 
+
 void show () { glutPostRedisplay(); }
 void clear () { int i = 0; for (i = 0; i < M_W; i++) set_line_M(i, 0, 0, 0); }
 
 int min(int a, int b) { return a<b?a:b; }
 float minf(float a, float b) { return a<b?a:b; }
+float maxf(float a, float b) { return a>b?a:b; }
+
+void add_line_M( int i, float _r, float _g, float _b ) {
+	int j = 0;
+	for(j = 0; j < M_W; j++) {
+		M[i][j][0] = minf(1.0, M[i][j][0] + _r);
+		M[i][j][1] = minf(1.0, M[i][j][1] + _g);
+		M[i][j][2] = minf(1.0, M[i][j][2] + _b);
+	}
+}
+
+void add_col_M( int j, float _r, float _g, float _b ) {
+	int i = 0;
+	for(i = 0; i < M_H; i++) {
+		M[i][j][0] = minf(1.0, M[i][j][0] + _r);
+		M[i][j][1] = minf(1.0, M[i][j][1] + _g);
+		M[i][j][2] = minf(1.0, M[i][j][2] + _b);
+	}
+}
+
+void add_pixel_M( int i, int j, float _r, float _g, float _b ) {
+	M[i][j][0] = minf(1.0, M[i][j][0] + _r);
+	M[i][j][1] = minf(1.0, M[i][j][1] + _g);
+	M[i][j][2] = minf(1.0, M[i][j][2] + _b);
+}
 
 int toint(char *s) {
 	int i = 0;
@@ -124,6 +153,37 @@ int toint(char *s) {
 	}
 	
 	return min(M_MAX-1, r);
+}
+
+enum menu_opcoes cmd_val(char *cmd) {
+	if(strcmp(cmd, "show") == 0)	return main_opt = SHOW;
+
+	if(strcmp(cmd, "clean") == 0 
+	|| strcmp(cmd, "clear") == 0
+	|| strcmp(cmd, "reset") == 0)	return main_opt = CLEAR;
+	
+	if(strcmp(cmd, "pixel") == 0
+	|| strcmp(cmd, "p") == 0)	return main_opt = PIXEL;
+	
+	if(strcmp(cmd, "column") == 0
+	|| strcmp(cmd, "col") == 0
+	|| strcmp(cmd, "c") == 0)	return main_opt = COLUMN;
+	
+	if(strcmp(cmd, "line") == 0
+	|| strcmp(cmd, "l") == 0)	return main_opt = LINE;
+
+	if(strcmp(cmd, "invert") == 0
+	|| strcmp(cmd, "inv") == 0
+	|| strcmp(cmd, "i") == 0)	return main_opt = INV;
+
+	if(strcmp(cmd, "add") == 0)	return main_opt = ADD;
+
+	if(strcmp(cmd, "diagonal") == 0
+	|| strcmp(cmd, "diag") == 0
+	|| strcmp(cmd, "d") == 0)	return main_opt = DIAGONAL;
+	
+	return main_opt = NONE;
+	
 }
 
 void * io_handler( void *user_data ) {
@@ -144,82 +204,147 @@ void * io_handler( void *user_data ) {
 	while(fgets(buff, 8192, stdin)) {
 		printf("-> ");
 		sscanf(buff, "%s %s %s %s %s %s", cmd, p1, p2, p3, p4, p5);
-		if(strcmp(cmd, "show") == 0) { show(); }
-		else if(strcmp(cmd, "clean") == 0 || strcmp(cmd, "clear") == 0 || strcmp(cmd, "reset") == 0) { clear(); }
-		else if(strcmp(cmd, "pixel") == 0 || strcmp(cmd, "p") == 0) {
-			_x = toint(p1);
-			_y = toint(p2);
-			if(_x < 0 || _y < 0) continue;
-			if(strcmp(p3, "red") == 0) 	  set_M(_x, _y, 1, 0, 0);
-			else if(strcmp(p3, "green") == 0) set_M(_x, _y, 0, 1, 0);
-			else if(strcmp(p3, "blue") == 0)  set_M(_x, _y, 0, 0, 1);
-			else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_line_M(_x, 0, 0, 0);
-			else {
-				__r = minf(1.0, (float) toint(p3) / 255.0);
-				__g = minf(1.0, (float) toint(p4) / 255.0);
-				__b = minf(1.0, (float) toint(p5) / 255.0);
-				
-				if(__r < 0 || __g < 0 || __b < 0) continue;
-				set_M(_x, _y, __r, __g, __b);
-			}
-			
-		} else if(strcmp(cmd, "column") == 0 || strcmp(cmd, "col") == 0 || strcmp(cmd, "c") == 0) { 
-			_y = toint(p1);
-			
-			if(_y < 0) continue;
-			if(strcmp(p2, "red") == 0) 	  set_col_M(_y, 1, 0, 0);
-			else if(strcmp(p2, "green") == 0) set_col_M(_y, 0, 1, 0);
-			else if(strcmp(p2, "blue") == 0)  set_col_M(_y, 0, 0, 1);
-			else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_line_M(_x, 0, 0, 0);
-			else {
-				__r = minf(1.0, (float) toint(p2) / 255.0);
-				__g = minf(1.0, (float) toint(p3) / 255.0);
-				__b = minf(1.0, (float) toint(p4) / 255.0);
-				
-				if(__r < 0 || __g < 0 || __b < 0) continue;
-				
-				set_col_M(_y, __r, __g, __b);
-			}
-		} else if(strcmp(cmd, "line") == 0 || strcmp(cmd, "l") == 0) {
-			_x = toint(p1);
-		
-			if(_x < 0) continue;
-			if(strcmp(p2, "red") == 0) 	  set_line_M(_x, 1, 0, 0);
-			else if(strcmp(p2, "green") == 0) set_line_M(_x, 0, 1, 0);
-			else if(strcmp(p2, "blue") == 0)  set_line_M(_x, 0, 0, 1);
-			else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_line_M(_x, 0, 0, 0);
-			else {
-				__r = minf(1.0, (float) toint(p3) / 255.0);
-				__g = minf(1.0, (float) toint(p4) / 255.0);
-				__b = minf(1.0, (float) toint(p5) / 255.0);
-				
-				if(__r < 0 || __g < 0 || __b < 0) continue;
-				set_line_M(_x,__r, __g, __b);
-			}
-		} else if(strcmp(cmd, "invert") == 0 || strcmp(cmd, "inv") == 0 || strcmp(cmd, "i") == 0) { 
-			if(strcmp(p1, "all") == 0 || strcmp(p1, "a") == 0) { 
-				for(_x = 0; _x < M_H; _x++) 
-					for(_y = 0; _y < M_W; _y++)
-						inv_M(_x, _y);
-			} else if(strcmp(p1, "pixel") == 0 || strcmp(p1, "p") == 0) {
-				_x = toint(p2);
-				_y = toint(p3);
-				
-				if(_x < 0 || _y < 0) continue;
-				inv_M(_x, _y);
-			} else if(strcmp(p1, "column") == 0 || strcmp(p1, "col") == 0 || strcmp(p1, "c") == 0) {
+		switch(cmd_val(cmd)) {
+			case SHOW	: show(); break;
+			case CLEAR	: clear(); break;
+			case PIXEL	:
+				_x = toint(p1);
 				_y = toint(p2);
+				if(_x < 0 || _y < 0) continue;
+				if(strcmp(p3, "red") == 0) 	  set_M(_x, _y, 1, 0, 0);
+				else if(strcmp(p3, "green") == 0) set_M(_x, _y, 0, 1, 0);
+				else if(strcmp(p3, "blue") == 0)  set_M(_x, _y, 0, 0, 1);
+				else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_M(_x, _y, 0, 0, 0);
+				else {
+					__r = minf(1.0, (float) toint(p3) / 255.0);
+					__g = minf(1.0, (float) toint(p4) / 255.0);
+					__b = minf(1.0, (float) toint(p5) / 255.0);
+					
+					if(__r < 0 || __g < 0 || __b < 0) continue;
+					set_M(_x, _y, __r, __g, __b);
+				}
+				break;
+			
+			case COLUMN	:
+				_y = toint(p1);
+				
 				if(_y < 0) continue;
-				for(_x = 0; _x < M_H; _x++) inv_M(_x, _y);
-			} else if(strcmp(p1, "line") == 0 || strcmp(p1, "l") == 0) {
-				_x = toint(p2);
+				if(strcmp(p2, "red") == 0) 	  set_col_M(_y, 1, 0, 0);
+				else if(strcmp(p2, "green") == 0) set_col_M(_y, 0, 1, 0);
+				else if(strcmp(p2, "blue") == 0)  set_col_M(_y, 0, 0, 1);
+				else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_col_M(_y, 0, 0, 0);
+				else {
+					__r = minf(1.0, (float) toint(p2) / 255.0);
+					__g = minf(1.0, (float) toint(p3) / 255.0);
+					__b = minf(1.0, (float) toint(p4) / 255.0);
+					
+					if(__r < 0 || __g < 0 || __b < 0) continue;
+					set_col_M(_y, __r, __g, __b);
+				}
+				break;
+			
+			case LINE	:
+				_x = toint(p1);
+			
 				if(_x < 0) continue;
-				for(_y = 0; _y < M_W; _y++) inv_M(_x, _y);
-			}
-		} else if(strcmp(cmd, "diagonal") == 0 || strcmp(cmd, "diag") == 0 || strcmp(cmd, "d") == 0) {
-		} else { }
-	}
+				if(strcmp(p2, "red") == 0) 	  set_line_M(_x, 1, 0, 0);
+				else if(strcmp(p2, "green") == 0) set_line_M(_x, 0, 1, 0);
+				else if(strcmp(p2, "blue") == 0)  set_line_M(_x, 0, 0, 1);
+				else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  set_line_M(_x, 0, 0, 0);
+				else {
+					__r = minf(1.0, (float) toint(p3) / 255.0);
+					__g = minf(1.0, (float) toint(p4) / 255.0);
+					__b = minf(1.0, (float) toint(p5) / 255.0);
+					
+					if(__r < 0 || __g < 0 || __b < 0) continue;
+					set_line_M(_x,__r, __g, __b);
+				}
+				break;
+				
+			case INV	:
+				if(strcmp(p1, "all") == 0 || strcmp(p1, "a") == 0) { 
+					for(_x = 0; _x < M_H; _x++) 
+							for(_y = 0; _y < M_W; _y++)
+							inv_M(_x, _y);
+				} else if(strcmp(p1, "pixel") == 0 || strcmp(p1, "p") == 0) {
+					_x = toint(p2);
+					_y = toint(p3);
+					
+					if(_x < 0 || _y < 0) continue;
+					inv_M(_x, _y);
+				} else if(strcmp(p1, "column") == 0 || strcmp(p1, "col") == 0 || strcmp(p1, "c") == 0) {
+					_y = toint(p2);
+					if(_y < 0) continue;
+					for(_x = 0; _x < M_H; _x++) inv_M(_x, _y);
+				} else if(strcmp(p1, "line") == 0 || strcmp(p1, "l") == 0) {
+					_x = toint(p2);
+					if(_x < 0) continue;
+					for(_y = 0; _y < M_W; _y++) inv_M(_x, _y);
+				}
+				break;
+				
+			case ADD	:
+				if(strcmp(p1, "pixel") == 0 || strcmp(p1, "p") == 0) {
+					_x = toint(p2);
+					_y = toint(p3);
+					if(_x < 0 || _y < 0) continue;
+					if(strcmp(p3, "red") == 0) 	  add_pixel_M(_x, _y, 1, 0, 0);
+					else if(strcmp(p3, "green") == 0) add_pixel_M(_x, _y, 0, 1, 0);
+					else if(strcmp(p3, "blue") == 0)  add_pixel_M(_x, _y, 0, 0, 1);
+					else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  add_pixel_M(_x, _y, 0, 0, 0);
+					else {
+						__r = minf(1.0, (float) toint(p3) / 255.0);
+						__g = minf(1.0, (float) toint(p4) / 255.0);
+						__b = minf(1.0, (float) toint(p5) / 255.0);
+					
+						if(__r < 0 || __g < 0 || __b < 0) continue;				
+						add_pixel_M(_x, _y, __r, __g, __b);
+					}
+					
+					
+				} else if(strcmp(p1, "column") == 0 || strcmp(p1, "col") == 0 || strcmp(p1, "c") == 0) {
+					_y = toint(p2);
+					if(_y < 0) continue;
+					if(strcmp(p3, "red") == 0) 	  add_col_M(_y, 1, 0, 0);
+					else if(strcmp(p3, "green") == 0) add_col_M(_y, 0, 1, 0);
+					else if(strcmp(p3, "blue") == 0)  add_col_M(_y, 0, 0, 1);
+					else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  add_col_M(_x, 0, 0, 0);
+					else {
+						__r = minf(1.0, (float) toint(p3) / 255.0);
+						__g = minf(1.0, (float) toint(p4) / 255.0);
+						__b = minf(1.0, (float) toint(p5) / 255.0);
+					
+						if(__r < 0 || __g < 0 || __b < 0) continue;				
+						add_col_M(_y, __r, __g, __b);
+					}
+					
+				} else if(strcmp(p1, "line") == 0 || strcmp(p1, "l") == 0) {
+					_x = toint(p2);
+					if(_x < 0) continue;
+					if(strcmp(p3, "red") == 0) 	  add_line_M(_x, 1, 0, 0);
+					else if(strcmp(p3, "green") == 0) add_line_M(_x, 0, 1, 0);
+					else if(strcmp(p3, "blue") == 0)  add_line_M(_x, 0, 0, 1);
+					else if(strcmp(p2, "black") == 0 || strcmp(p2, "off") == 0)  add_line_M(_x, 0, 0, 0);
+					else {
+						__r = minf(1.0, (float) toint(p3) / 255.0);
+						__g = minf(1.0, (float) toint(p4) / 255.0);
+						__b = minf(1.0, (float) toint(p5) / 255.0);
+					
+						if(__r < 0 || __g < 0 || __b < 0) continue;				
+						add_line_M(_x, __r, __g, __b);
+					}
+					
+				}
+				
+				break;
+
+			case DIAGONAL	:
+				break;
+
+			default : break;
+		}
 	
+	}
 	printf("\nBye!\n");
 	exit (0);
 
@@ -231,7 +356,7 @@ void * fx_loop( void *user_data ) {
 	while( 1 ) {
 		clear();
 		for(i = 0; i < M_H; i++) {
-			set_col_M(i, 1, 0, 0);
+			add_col_M(i, 1, 0, 0);
 			show();
 			usleep(100000);
 		}
@@ -247,6 +372,8 @@ int main (int argc, char *argv[]) {
 
 	pthread_t io_thread;
 	pthread_t fx_thread;
+	
+	main_opt = NONE;
 	
 	pthread_create(&io_thread, NULL, io_handler, NULL);
 	pthread_create(&fx_thread, NULL, fx_loop, NULL);
