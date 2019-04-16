@@ -286,10 +286,12 @@ void get_colors(char *p1, char *p2, char *p3, float *r, float *g, float *b) {
 	
 }
 
+void setup();
 void loop ();
 void * fx_loop( void *user_data ) {
 	int *playing = (int *) user_data;
 	sleep(1);
+	setup();
 	while( *playing ) loop();
 	
 	return NULL;

@@ -1,5 +1,9 @@
 #include "fx.c"
 
+void setup () {
+
+}
+
 void loop () {
 	
 	int i, j;
