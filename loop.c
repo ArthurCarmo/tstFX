@@ -1,6 +1,7 @@
 #include "fx.c"
 
 void setup () {
+
 	clear();
 }
 

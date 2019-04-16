@@ -17,7 +17,7 @@ float M[M_MAX][M_MAX][3] = { 0 };
 int lineL = orthoX / M_H;
 int colL  = orthoY / M_W;
 
-enum menu_opcoes { NONE = 0, PIXEL, LINE, COLUMN, INV, DIAGONAL, CLEAR, ADD, SUB, FX } main_opt;
+enum menu_opcoes { NONE = 0, PIXEL, LINE, COLUMN, INV, DIAGONAL, CLEAR, ADD, SUB, BYE, FX } main_opt;
 enum menu_opcoes sec_opt;
 
 int min(int a, int b) { return a<b?a:b; }
@@ -246,6 +246,10 @@ enum menu_opcoes cmd_val(char *cmd) {
 	|| strcmp(cmd, "diag") == 0
 	|| strcmp(cmd, "d") == 0)	return main_opt = DIAGONAL;
 	
+	if(strcmp(cmd, "bye") == 0
+	|| strcmp(cmd, "exit") == 0
+	|| strcmp(cmd, "quit") == 0)	return main_opt = BYE;
+	
 	if(strcmp(cmd, "fx") == 0
 	|| strcmp(cmd, "effect") == 0)	return main_opt = FX;
 	
@@ -434,10 +438,15 @@ void * io_handler( void *user_data ) {
 			case DIAGONAL	:
 				break;
 
+
+			case BYE	: goto JMP;			
+			
 			default : break;
 		}
 	
 	}
+
+	JMP:
 	if(playing) {
 		playing = 0;
 		pthread_join(fx_thread, NULL);
