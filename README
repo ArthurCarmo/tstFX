@@ -19,5 +19,15 @@ inv_pixel_M (x, y)
 inv_line_M (x)
 inv_col_M (y)
 
+// Operações com range
+set_line_range (x, start, end, r, g, b)
+add_line_range (x, start, end, r, g, b)
+
+set_col_range (y, start, end, r, g, b)
+add_col_range (y, start, end, r, g, b)
+
+inv_line_range(x, start, end)
+inv_col_range (y, start, end)
+
 // Grid todo em zero
 clear ()
