@@ -1,8 +1,10 @@
 loop.cpp - Função que fica em loop para criar o efeito
-conf.h - Configurações de tamanho da matriz
 fx.c   - Gerencia o grid e a thread de efeitos
 
 Manipulação do grid :
+
+// Modificar um pixel pela posição na fita de led
+set_strip (n, r, g, b)
 
 // Colocar um determinado valor rgb na posição do grid
 set_pixel_M (x, y, r, g, b)
