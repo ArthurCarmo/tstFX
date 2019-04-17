@@ -15,6 +15,7 @@ float M[M_MAX][M_MAX][3] = { 0 };
 
 int M_W = 12;
 int M_H = 12;
+int LED_COUNT;
 
 int orthoX;
 int orthoY;
@@ -470,6 +471,7 @@ int main (int argc, char *argv[]) {
 	
 	orthoX = 10 * M_W;
 	orthoY = 10 * M_H;
+	LED_COUNT = M_W * M_H;
 	
 	glutInit(&argc, argv);
 
@@ -626,5 +628,17 @@ void inv_col_range ( int j, int start, int end ) {
 		M[i][j][1] = 1.0 - M[i][j][1];
 		M[i][j][2] = 1.0 - M[i][j][2];
 	}
+
+}
+
+void set_strip ( int n, int r, int g, int b ) {
+	int i, j;
+	
+	i = n / M_W;
+	j = (i%2)?(M_W - (n % M_W) - 1):(n % M_W);
+	
+	M[i][j][0] = (float) r / 255.0;
+	M[i][j][1] = (float) g / 255.0;
+	M[i][j][2] = (float) b / 255.0;
 
 }
