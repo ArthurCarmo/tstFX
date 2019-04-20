@@ -1,5 +1,9 @@
-loop.cpp - Função que fica em loop para criar o efeito
+loop.cpp - Função que fica em loop para criar o efeito.
+	   "imita" sintaxe do arduino
 fx.c   - Gerencia o grid e a thread de efeitos
+
+Dependências: 
+	freeglut3-dev
 
 Manipulação do grid :
 
