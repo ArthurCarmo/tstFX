@@ -2,8 +2,8 @@
 
 void setup () {
 	
-	M_W = 12; // width
-	M_H = 12; // height
+	MAT_COLS = 12; // width
+	MAT_LINES = 12; // height
 
 	clear();
 	
@@ -11,20 +11,23 @@ void setup () {
 
 void loop () {
 	
-	for(int j = 0; j < M_W; j++) {
+	for(int j = 0; j < MAT_COLS; j++) {
 		set_col_range(j, 0, j+1, 255, 0, 0);
+		show();
 		usleep(100000);
 	}
 	
-	for(int i = 0; i < M_H; i++) {
-		int line  = M_H - i - 1;
+	for(int i = 0; i < MAT_LINES; i++) {
+		int line  = MAT_LINES - i - 1;
 		int start = 0;
-		int end   = M_H - i;
+		int end   = MAT_LINES - i;
 		add_line_range(line, start, end, 0, 255, 0);
+		show();
 		usleep(100000);
 	}
 		
 	clear();
+	show();
 	usleep(100000);
 	
 	for(int k = 0; k < LED_COUNT; k += 4) {
@@ -40,7 +43,7 @@ void loop () {
 			set_strip(j-2, 255, 0, 0);
 			set_strip(i+3, 0, 0, 255);
 			set_strip(j-3, 255, 0, 0);
-			
+			show();
 			usleep(20000);
 		}
 	}

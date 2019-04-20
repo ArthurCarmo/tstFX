@@ -12,9 +12,10 @@
 int screenW = 600;
 int screenH = 480;
 float M[M_MAX][M_MAX][3] = { 0 };
+float RM[M_MAX][M_MAX][3] = { 0 };
 
-int M_W = 12;
-int M_H = 12;
+int MAT_COLS = 12;
+int MAT_LINES = 12;
 int LED_COUNT;
 
 int orthoX;
@@ -29,6 +30,8 @@ enum menu_opcoes sec_opt;
 int min(int a, int b) { return a<b?a:b; }
 float minf(float a, float b) { return a<b?a:b; }
 float maxf(float a, float b) { return a>b?a:b; }
+
+void show() { int i, j, k; for(i = 0; i < MAT_LINES; i++) for(j = 0; j < MAT_COLS; j++) for(k = 0; k < 3; k++) RM[i][j][k] = M[i][j][k]; }
 
 void paint( int i, int j, float _r, float _g, float _b ) {
 
@@ -64,9 +67,9 @@ void draw_matrix ()  {
 
 	int i, j;
 
-	for(i = 0; i < M_H; i++)
-		for(j = 0; j < M_W; j++)
-			paint(j, i, M[i][j][0], M[i][j][1], M[i][j][2]);
+	for(i = 0; i < MAT_LINES; i++)
+		for(j = 0; j < MAT_COLS; j++)
+			paint(j, i, RM[i][j][0], RM[i][j][1], RM[i][j][2]);
 
 }
 
@@ -93,7 +96,7 @@ void inv_pixel_M( int i, int j ) {
 
 void inv_line_M ( int i ) {
 	int j;
-	for(j = 0; j < M_W; j++) {
+	for(j = 0; j < MAT_COLS; j++) {
 		M[i][j][0] = 1 - M[i][j][0];
 		M[i][j][1] = 1 - M[i][j][1];
 		M[i][j][2] = 1 - M[i][j][2];
@@ -102,7 +105,7 @@ void inv_line_M ( int i ) {
 
 void inv_col_M (int j ) {
 	int i;
-	for(i = 0; i < M_H; i++) {
+	for(i = 0; i < MAT_LINES; i++) {
 		M[i][j][0] = 1 - M[i][j][0];
 		M[i][j][1] = 1 - M[i][j][1];
 		M[i][j][2] = 1 - M[i][j][2];
@@ -120,7 +123,7 @@ void set_pixel_Mf( int i, int j, float _r, float _g, float _b) {
 
 void set_line_Mf( int i, float _r, float _g, float _b ) {
 	int j;
-	for(j = 0; j < M_W; j++) {
+	for(j = 0; j < MAT_COLS; j++) {
 		M[i][j][0] = _r;
 		M[i][j][1] = _g;
 		M[i][j][2] = _b;
@@ -129,7 +132,7 @@ void set_line_Mf( int i, float _r, float _g, float _b ) {
 
 void set_col_Mf( int j, float _r, float _g, float _b ) {
 	int i;
-	for(i = 0; i < M_H; i++) {
+	for(i = 0; i < MAT_LINES; i++) {
 		M[i][j][0] = _r;
 		M[i][j][1] = _g;
 		M[i][j][2] = _b;
@@ -144,7 +147,7 @@ void add_pixel_Mf( int i, int j, float _r, float _g, float _b ) {
 
 void add_line_Mf( int i, float _r, float _g, float _b ) {
 	int j = 0;
-	for(j = 0; j < M_W; j++) {
+	for(j = 0; j < MAT_COLS; j++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + _r);
 		M[i][j][1] = minf(1.0, M[i][j][1] + _g);
 		M[i][j][2] = minf(1.0, M[i][j][2] + _b);
@@ -153,14 +156,14 @@ void add_line_Mf( int i, float _r, float _g, float _b ) {
 
 void add_col_Mf( int j, float _r, float _g, float _b ) {
 	int i = 0;
-	for(i = 0; i < M_H; i++) {
+	for(i = 0; i < MAT_LINES; i++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + _r);
 		M[i][j][1] = minf(1.0, M[i][j][1] + _g);
 		M[i][j][2] = minf(1.0, M[i][j][2] + _b);
 	}
 }
 
-void clear () { int i; for (i = 0; i < M_H; i++) set_line_Mf(i, 0, 0, 0); }
+void clear () { int i; for (i = 0; i < MAT_LINES; i++) set_line_Mf(i, 0, 0, 0); }
 
 void set_pixel_M( int i, int j, int _r, int _g, int _b ) {
 	
@@ -172,7 +175,7 @@ void set_pixel_M( int i, int j, int _r, int _g, int _b ) {
 
 void set_line_M( int i, int _r, int _g, int _b ) {
 	int j;
-	for(j = 0; j < M_W; j++) {
+	for(j = 0; j < MAT_COLS; j++) {
 		M[i][j][0] = (float) _r / 255.0;
 		M[i][j][1] = (float) _g / 255.0;
 		M[i][j][2] = (float) _b / 255.0;
@@ -181,7 +184,7 @@ void set_line_M( int i, int _r, int _g, int _b ) {
 
 void set_col_M( int j, int _r, int _g, int _b ) {
 	int i;
-	for(i = 0; i < M_H; i++) {
+	for(i = 0; i < MAT_LINES; i++) {
 		M[i][j][0] = (float) _r / 255.0;
 		M[i][j][1] = (float) _g / 255.0;
 		M[i][j][2] = (float) _b / 255.0;
@@ -196,7 +199,7 @@ void add_pixel_M( int i, int j, int _r, int _g, int _b ) {
 
 void add_line_M( int i, int _r, int _g, int _b ) {
 	int j = 0;
-	for(j = 0; j < M_W; j++) {
+	for(j = 0; j < MAT_COLS; j++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + (float) _r / 255.0);
 		M[i][j][1] = minf(1.0, M[i][j][1] + (float) _g / 255.0);
 		M[i][j][2] = minf(1.0, M[i][j][2] + (float) _b / 255.0);
@@ -205,7 +208,7 @@ void add_line_M( int i, int _r, int _g, int _b ) {
 
 void add_col_M( int j, int _r, int _g, int _b ) {
 	int i = 0;
-	for(i = 0; i < M_H; i++) {
+	for(i = 0; i < MAT_LINES; i++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + (float) _r / 255.0);
 		M[i][j][1] = minf(1.0, M[i][j][1] + (float) _g / 255.0);
 		M[i][j][2] = minf(1.0, M[i][j][2] + (float) _b / 255.0);
@@ -370,8 +373,8 @@ void * io_handler( void *user_data ) {
 				
 			case INV	:
 				if(strcmp(p1, "all") == 0 || strcmp(p1, "a") == 0) { 
-					for(_x = 0; _x < M_H; _x++) 
-						for(_y = 0; _y < M_W; _y++)
+					for(_x = 0; _x < MAT_LINES; _x++) 
+						for(_y = 0; _y < MAT_COLS; _y++)
 							inv_pixel_M(_x, _y);
 				} else if(strcmp(p1, "pixel") == 0 || strcmp(p1, "p") == 0) {
 					_x = toint(p2);
@@ -469,9 +472,9 @@ int main (int argc, char *argv[]) {
 	
 	setup();
 	
-	orthoX = 10 * M_W;
-	orthoY = 10 * M_H;
-	LED_COUNT = M_W * M_H;
+	orthoX = 10 * MAT_COLS;
+	orthoY = 10 * MAT_LINES;
+	LED_COUNT = MAT_COLS * MAT_LINES;
 	
 	glutInit(&argc, argv);
 
@@ -515,7 +518,7 @@ void set_line_range ( int i, int start, int end, int r, int g, int b ) {
 		
 	}
 	
-	end = min(end, M_W);
+	end = min(end, MAT_COLS);
 	
 	for(j = start; j < end; j++) {
 		M[i][j][0] = (float) r / 255.0;
@@ -537,7 +540,7 @@ void set_col_range ( int j, int start, int end, int r, int g, int b ) {
 		
 	}
 	
-	end = min(end, M_H);
+	end = min(end, MAT_LINES);
 	
 	for(i = start; i < end; i++) {
 		M[i][j][0] = (float) r / 255.0;
@@ -559,7 +562,7 @@ void add_line_range ( int i, int start, int end, int r, int g, int b ) {
 		
 	}
 	
-	end = min(end, M_W);
+	end = min(end, MAT_COLS);
 	
 	for(j = start; j < end; j++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + (float) r / 255.0);
@@ -581,7 +584,7 @@ void add_col_range ( int j, int start, int end, int r, int g, int b ) {
 		
 	}
 	
-	end = min(end, M_H);
+	end = min(end, MAT_LINES);
 	
 	for(i = start; i < end; i++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + (float) r / 255.0);
@@ -601,7 +604,7 @@ void inv_line_range ( int i, int start, int end ) {
 		end = j;
 		
 	}
-	end = min(end, M_W);
+	end = min(end, MAT_COLS);
 	
 	for(j = start; j < end; j++) {
 		M[i][j][0] = 1.0 - M[i][j][0];
@@ -621,7 +624,7 @@ void inv_col_range ( int j, int start, int end ) {
 		end = j;
 		
 	}
-	end = min(end, M_H);
+	end = min(end, MAT_LINES);
 	
 	for(i = start; i < end; i++) {
 		M[i][j][0] = 1.0 - M[i][j][0];
@@ -634,8 +637,8 @@ void inv_col_range ( int j, int start, int end ) {
 void set_strip ( int n, int r, int g, int b ) {
 	int i, j;
 	
-	i = n / M_W;
-	j = (i%2)?(M_W - (n % M_W) - 1):(n % M_W);
+	i = n / MAT_COLS;
+	j = (i%2)?(MAT_COLS - (n % MAT_COLS) - 1):(n % MAT_COLS);
 	
 	M[i][j][0] = (float) r / 255.0;
 	M[i][j][1] = (float) g / 255.0;
