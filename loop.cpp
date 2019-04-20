@@ -14,7 +14,7 @@ void loop () {
 	for(int j = 0; j < MAT_COLS; j++) {
 		set_col_range(j, 0, j+1, 255, 0, 0);
 		show();
-		usleep(100000);
+		delay(100);
 	}
 	
 	for(int i = 0; i < MAT_LINES; i++) {
@@ -23,12 +23,12 @@ void loop () {
 		int end   = MAT_LINES - i;
 		add_line_range(line, start, end, 0, 255, 0);
 		show();
-		usleep(100000);
+		delay(100);
 	}
 		
 	clear();
 	show();
-	usleep(100000);
+	delay(100);
 	
 	for(int k = 0; k < LED_COUNT; k += 4) {
 		int n = LED_COUNT / 2 - k - 3;
@@ -44,7 +44,7 @@ void loop () {
 			set_strip(i+3, 0, 0, 255);
 			set_strip(j-3, 255, 0, 0);
 			show();
-			usleep(20000);
+			delay(20);
 		}
 	}
 	

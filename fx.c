@@ -33,6 +33,10 @@ float maxf(float a, float b) { return a>b?a:b; }
 
 void show() { int i, j, k; for(i = 0; i < MAT_LINES; i++) for(j = 0; j < MAT_COLS; j++) for(k = 0; k < 3; k++) RM[i][j][k] = M[i][j][k]; }
 
+void delay(int t) {
+	usleep(t * 1000);
+}
+
 void paint( int i, int j, float _r, float _g, float _b ) {
 
 	int geo_i = i * lineL;
