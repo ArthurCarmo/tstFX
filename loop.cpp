@@ -5,6 +5,8 @@ void setup () {
 	MAT_COLS = 12; // width
 	MAT_LINES = 12; // height
 
+	begin();
+	
 	clear();
 	
 }

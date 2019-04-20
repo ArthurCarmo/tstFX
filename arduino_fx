@@ -2,6 +2,8 @@ int map_px ( int l, int c ) {
 	return l *  MAT_COLS + ((l % 2)?MAT_COLS-c-1:c);
 }
 void show () { strip.show(); }
+void clear() { strip.clear(); }
+void begin() { strip.begin(); }
 void set_pixel_M( int i, int j, int _r, int _g, int _b ) {
 	strip.setPixelColor(map_px(i, j), _r, _g, _b);
 }
