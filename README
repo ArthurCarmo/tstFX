@@ -1,6 +1,7 @@
-loop.cpp - Função que fica em loop para criar o efeito.
-	   "imita" sintaxe do arduino
-fx.cpp   - Gerencia o grid e a thread de efeitos
+loop.cpp 	- Função que fica em loop para criar o efeito.
+		  "imita" sintaxe do arduino
+fx.cpp   	- Gerencia o grid e a thread de efeitos
+arduino_fx 	- Versões das funções para o arduino
 
 Dependências: 
 
@@ -33,5 +34,8 @@ add_col_range (y, start, end, r, g, b)
 inv_line_range(x, start, end)
 inv_col_range (y, start, end)
 
-// Grid todo em zero
+// Manipular todo o grid
+set_M (r, g, b)
+add_M (r, g, b)
+inv_M ()
 clear ()
