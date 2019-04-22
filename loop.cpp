@@ -36,12 +36,14 @@ void loop () {
 	delay(100);
 	
 	bool turn = true;
+	bool black = false;
 	for(int k = 0; k < LED_COUNT; k += 4) {
 		int n = LED_COUNT / 2 - k - 3;
-		if(k >= LED_COUNT / 4 && turn) { turn = false; inv_M(); strip.show(); }
+		if(k >= LED_COUNT / 4 && turn) { turn = false; black = !black; inv_M(); strip.show(); }
+		black = !black;
 		for(int i = 0, j = LED_COUNT-1; i < n; i++, j--) {
-			if(i > 0) strip.setPixelColor(i-1, 0, 0, 0);
-			if(j < LED_COUNT-1) set_strip(j+1, 0, 0, 0);
+			if(i > 0) strip.setPixelColor(i-1, 255 * black, 255 * black, 255 * black);
+			if(j < LED_COUNT-1) set_strip(j+1, 255 * black, 255 * black, 255 * black);
 			strip.setPixelColor(i, 0, 0, 255);
 			strip.setPixelColor(j, 255, 0, 0);
 			strip.setPixelColor(i+1, 0, 0, 255);
