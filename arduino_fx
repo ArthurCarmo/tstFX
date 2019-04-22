@@ -9,8 +9,8 @@ void add_M(int _r, int _g, int _b) {
 	int r, g, b;
 	for(int i = 0; i < LED_COUNT; i++) { 
 		pcolor = strip.getPixelColor(i);
-		r = pcolor & 0xFF0000;
-		g = pcolor & 0x00FF00;
+		r = (pcolor & 0xFF0000) >> 16;
+		g = (pcolor & 0x00FF00) >> 8;
 		b = pcolor & 0x0000FF;
 		strip.setPixelColor(i, min(255, _r + r), min(255, _g + g), min(255, _b + b));
 		
@@ -21,8 +21,8 @@ void inv_M() {
 	int r, g, b;
 	for(int i = 0; i < LED_COUNT; i++) { 
 		pcolor = strip.getPixelColor(i);
-		r = pcolor & 0xFF0000;
-		g = pcolor & 0x00FF00;
+		r = (pcolor & 0xFF0000) >> 16;
+		g = (pcolor & 0x00FF00) >> 8;
 		b = pcolor & 0x0000FF;
 		strip.setPixelColor(i, 255 - r, 255 - g, 255 - b);
 	}
@@ -43,8 +43,8 @@ void set_col_M( int j, int _r, int _g, int _b ) {
 }
 void add_pixel_M( int i, int j, int _r, int _g, int _b ) {
 	uint32_t pcolor = strip.getPixelColor(map_px(i, j));
-	int r = pcolor & 0xFF0000;
-	int g = pcolor & 0x00FF00;
+	int r = (pcolor & 0xFF0000) >> 16;
+	int g = (pcolor & 0x00FF00) >> 8;
 	int b = pcolor & 0x0000FF;
 	strip.setPixelColor(map_px(i, j), min(255, _r + r), min(255, _g + g), min(255, _b + b));	
 }
@@ -54,8 +54,8 @@ void add_line_M( int i, int _r, int _g, int _b ) {
 	uint32_t pcolor;
 	for(j = 0; j < MAT_COLS; j++) {
 		pcolor = strip.getPixelColor(map_px(i, j));
-		r = pcolor & 0xFF0000;
-		g = pcolor & 0x00FF00;
+		r = (pcolor & 0xFF0000) >> 16;
+		g = (pcolor & 0x00FF00) >> 8;
 		b = pcolor & 0x0000FF;
 		strip.setPixelColor(map_px(i, j), min(255, _r + r), min(255, _g + g), min(255, _b + b));
 	}
@@ -66,8 +66,8 @@ void add_col_M( int j, int _r, int _g, int _b ) {
 	uint32_t pcolor;
 	for(i = 0; i < MAT_LINES; i++) {
 		pcolor = strip.getPixelColor(map_px(i, j));
-		r = pcolor & 0xFF0000;
-		g = pcolor & 0x00FF00;
+		r = (pcolor & 0xFF0000) >> 16;
+		g = (pcolor & 0x00FF00) >> 8;
 		b = pcolor & 0x0000FF;
 		strip.setPixelColor(map_px(i, j), min(255, _r + r), min(255, _g + g), min(255, _b + b));
 	}
@@ -110,8 +110,8 @@ void add_line_range ( int i, int start, int end, int _r, int _g, int _b ) {
 	end = min(end, MAT_COLS);	
 	for(j = start; j < end; j++) {
 		pcolor = strip.getPixelColor(map_px(i, j));
-		r = pcolor & 0xFF0000;
-		g = pcolor & 0x00FF00;
+		r = (pcolor & 0xFF0000) >> 16;
+		g = (pcolor & 0x00FF00) >> 8;
 		b = pcolor & 0x0000FF;
 		strip.setPixelColor(map_px(i, j), min(255, _r + r), min(255, _g + g), min(255, _b + b));
 	}
@@ -128,16 +128,16 @@ void add_col_range ( int j, int start, int end, int _r, int _g, int _b ) {
 	end = min(end, MAT_LINES);
 	for(i = start; i < end; i++) {
 		pcolor = strip.getPixelColor(map_px(i, j));
-		r = pcolor & 0xFF0000;
-		g = pcolor & 0x00FF00;
+		r = (pcolor & 0xFF0000) >> 16;
+		g = (pcolor & 0x00FF00) >> 8;
 		b = pcolor & 0x0000FF;
 		strip.setPixelColor(map_px(i, j), min(255, _r + r), min(255, _g + g), min(255, _b + b));
 	}
 }
 void inv_pixel_M( int i, int j ) {
 	uint32_t pcolor = strip.getPixelColor(map_px(i, j));
-	int r = pcolor & 0xFF0000;
-	int g = pcolor & 0x00FF00;
+	int r = (pcolor & 0xFF0000) >> 16;
+	int g = (pcolor & 0x00FF00) >> 8;
 	int b = pcolor & 0x0000FF;
 	strip.setPixelColor(map_px(i, j), 255-r, 255-g, 255-b);
 }
@@ -147,8 +147,8 @@ void inv_line_M ( int i ) {
 	uint32_t pcolor;
 	for(j = 0; j < MAT_COLS; j++) {
 		pcolor = strip.getPixelColor(map_px(i, j));
-		r = pcolor & 0xFF0000;
-		g = pcolor & 0x00FF00;
+		r = (pcolor & 0xFF0000) >> 16;
+		g = (pcolor & 0x00FF00) >> 8;
 		b = pcolor & 0x0000FF;
 		strip.setPixelColor(map_px(i, j), 255-r, 255-g, 255-b);
 	}
@@ -159,8 +159,8 @@ void inv_col_M (int j ) {
 	uint32_t pcolor;
 	for(i = 0; i < MAT_LINES; i++) {
 		pcolor = strip.getPixelColor(map_px(i, j));
-		r = pcolor & 0xFF0000;
-		g = pcolor & 0x00FF00;
+		r = (pcolor & 0xFF0000) >> 16;
+		g = (pcolor & 0x00FF00) >> 8;
 		b = pcolor & 0x0000FF;
 		strip.setPixelColor(map_px(i, j), 255-r, 255-g, 255-b);
 	}
@@ -177,8 +177,8 @@ void inv_line_range ( int i, int start, int end ) {
 	end = min(end, MAT_COLS);
 	for(j = start; j < end; j++) {
 		pcolor = strip.getPixelColor(map_px(i, j));
-		r = pcolor & 0xFF0000;
-		g = pcolor & 0x00FF00;
+		r = (pcolor & 0xFF0000) >> 16;
+		g = (pcolor & 0x00FF00) >> 8;
 		b = pcolor & 0x0000FF;
 		strip.setPixelColor(map_px(i, j), 255-r, 255-g, 255-b);
 	}
@@ -195,8 +195,8 @@ void inv_col_range ( int j, int start, int end ) {
 	end = min(end, MAT_LINES);
 	for(i = start; i < end; i++) {
 		pcolor = strip.getPixelColor(map_px(i, j));
-		r = pcolor & 0xFF0000;
-		g = pcolor & 0x00FF00;
+		r = (pcolor & 0xFF0000) >> 16;
+		g = (pcolor & 0x00FF00) >> 8;
 		b = pcolor & 0x0000FF;
 		strip.setPixelColor(map_px(i, j), 255-r, 255-g, 255-b);
 	}
