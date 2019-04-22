@@ -1,7 +1,35 @@
 int map_px ( int l, int c ) {
 	return l *  MAT_COLS + ((l % 2)?MAT_COLS-c-1:c);
 }
-
+void set_M(int _r, int _g, int _b) {
+	for(int i = 0; i < LED_COUNT; i++) strip.setPixelColor(i, _r, _g, _b);
+}
+void add_M(int _r, int _g, int _b) {
+	uint32_t pcolor;
+	int r, g, b;
+	for(int i = 0; i < LED_COUNT; i++) { 
+		pcolor = strip.getPixelColor(i);
+		r = pcolor & 0xFF0000;
+		g = pcolor & 0x00FF00;
+		b = pcolor & 0x0000FF;
+		strip.setPixelColor(i, min(255, _r + r), min(255, _g + g), min(255, _b + b));
+		
+	}
+}
+void inv_M() {
+	uint32_t pcolor;
+	int r, g, b;
+	for(int i = 0; i < LED_COUNT; i++) { 
+		pcolor = strip.getPixelColor(i);
+		r = pcolor & 0xFF0000;
+		g = pcolor & 0x00FF00;
+		b = pcolor & 0x0000FF;
+		strip.setPixelColor(i, 255 - r, 255 - g, 255 - b);
+	}
+}
+void set_pixel_M( int i, int j, int _r, int _g, int _b) {
+	strip.setPixelColor(map_px(i, j), _r, _g, _b);
+}
 void set_line_M( int i, int _r, int _g, int _b ) {
 	int l = i * MAT_COLS;
 	for (int j = l + MAT_COLS; l < j; l++) 

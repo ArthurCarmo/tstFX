@@ -35,8 +35,10 @@ void loop () {
 	strip.show();
 	delay(100);
 	
+	bool turn = true;
 	for(int k = 0; k < LED_COUNT; k += 4) {
 		int n = LED_COUNT / 2 - k - 3;
+		if(k >= LED_COUNT / 4 && turn) { turn = false; inv_M(); strip.show(); }
 		for(int i = 0, j = LED_COUNT-1; i < n; i++, j--) {
 			if(i > 0) strip.setPixelColor(i-1, 0, 0, 0);
 			if(j < LED_COUNT-1) set_strip(j+1, 0, 0, 0);
@@ -52,5 +54,8 @@ void loop () {
 			delay(20);
 		}
 	}
+	
+	delay(500);
+	set_M(0, 0, 0);
 	
 }

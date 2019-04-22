@@ -91,27 +91,58 @@ void refresh_screen(void) {
 	glutPostRedisplay();
 }
 
+void add_M (int _r, int _g, int _b) {
+	for(int i = 0; i < MAT_LINES; i++) {
+		for(int j = 0; j < MAT_COLS; j++) {
+			M[i][j][0] = minf(1.0, M[i][j][0] + (float) _r / 255.0);
+			M[i][j][1] = minf(1.0, M[i][j][1] + (float) _g / 255.0);
+			M[i][j][2] = minf(1.0, M[i][j][2] + (float) _b / 255.0);
+		}	
+	}
+}
+
+void set_M (int _r, int _g, int _b) {
+	for(int i = 0; i < MAT_LINES; i++) {
+		for(int j = 0; j < MAT_COLS; j++) {
+			M[i][j][0] = (float) _r / 255.0;
+			M[i][j][1] = (float) _g / 255.0;
+			M[i][j][2] = (float) _b / 255.0;
+		}	
+	}
+}
+
+void inv_M () {
+	for(int i = 0; i < MAT_LINES; i++) {
+		for(int j = 0; j < MAT_COLS; j++) {
+			M[i][j][0] = 1.0 - M[i][j][0];
+			M[i][j][1] = 1.0 - M[i][j][1];
+			M[i][j][2] = 1.0 - M[i][j][2];
+		}	
+	}
+
+}
+
 void inv_pixel_M( int i, int j ) {
-	M[i][j][0] = 1 - M[i][j][0];
-	M[i][j][1] = 1 - M[i][j][1];
-	M[i][j][2] = 1 - M[i][j][2];
+	M[i][j][0] = 1.0 - M[i][j][0];
+	M[i][j][1] = 1.0 - M[i][j][1];
+	M[i][j][2] = 1.0 - M[i][j][2];
 }
 
 void inv_line_M ( int i ) {
 	int j;
 	for(j = 0; j < MAT_COLS; j++) {
-		M[i][j][0] = 1 - M[i][j][0];
-		M[i][j][1] = 1 - M[i][j][1];
-		M[i][j][2] = 1 - M[i][j][2];
+		M[i][j][0] = 1.0 - M[i][j][0];
+		M[i][j][1] = 1.0 - M[i][j][1];
+		M[i][j][2] = 1.0 - M[i][j][2];
 	}
 }
 
 void inv_col_M (int j ) {
 	int i;
 	for(i = 0; i < MAT_LINES; i++) {
-		M[i][j][0] = 1 - M[i][j][0];
-		M[i][j][1] = 1 - M[i][j][1];
-		M[i][j][2] = 1 - M[i][j][2];
+		M[i][j][0] = 1.0 - M[i][j][0];
+		M[i][j][1] = 1.0 - M[i][j][1];
+		M[i][j][2] = 1.0 - M[i][j][2];
 	}
 }
 
