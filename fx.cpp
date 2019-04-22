@@ -648,3 +648,44 @@ void set_strip ( int n, int r, int g, int b ) {
 	M[i][j][2] = (float) b / 255.0;
 
 }
+
+#define LED_PIN 0
+#define NEO_KHZ800 0
+#define NEO_KHZ400 0
+#define NEO_GRB 0
+#define NEO_RGB 0
+#define NEO_RGBW 0
+
+class Adafruit_NeoPixel { 
+
+	public :
+	
+		Adafruit_NeoPixel(int, int, int) { }
+	
+		void begin() { }
+		void clear() { int i; for (i = 0; i < MAT_LINES; i++) set_line_Mf(i, 0, 0, 0); }
+		void show()  { int i, j, k; for(i = 0; i < MAT_LINES; i++) for(j = 0; j < MAT_COLS; j++) for(k = 0; k < 3; k++) RM[i][j][k] = M[i][j][k]; }
+		
+		void setPixelColor( int n, int r, int g, int b ) { 
+		
+			int i, j;
+	
+			i = n / MAT_COLS;
+			j = (i%2)?(MAT_COLS - (n % MAT_COLS) - 1):(n % MAT_COLS);
+			
+			M[i][j][0] = (float) r / 255.0;
+			M[i][j][1] = (float) g / 255.0;
+			M[i][j][2] = (float) b / 255.0;
+		
+		}
+		
+		int getPixelColor( int n ) {
+			int i, j;
+			
+			i = n / MAT_COLS;
+			j = (i%2)?(MAT_COLS - (n % MAT_COLS) - 1):(n % MAT_COLS);
+			
+			return (((int) (M[i][j][0] * 255)) << 16) + (((int) (M[i][j][1] * 255)) << 8) + (int) (M[i][j][2] * 255);
+		}
+
+};
