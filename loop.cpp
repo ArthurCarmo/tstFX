@@ -8,8 +8,6 @@ void setup () {
 	MAT_LINES = 12; // height
 
 	strip.begin();
-	
-	strip.clear();
 	strip.show ();
 	
 }
