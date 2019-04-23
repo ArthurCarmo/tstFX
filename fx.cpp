@@ -3,7 +3,6 @@
 #include <pthread.h>
 #include <sys/time.h>
 #include <unistd.h>
-
 #include <GL/glut.h>
 #include <GL/freeglut.h>
 
@@ -28,6 +27,7 @@ enum menu_opcoes { NONE = 0, PIXEL, LINE, COLUMN, INV, DIAGONAL, CLEAR, ADD, SUB
 enum menu_opcoes sec_opt;
 
 int min(int a, int b) { return a<b?a:b; }
+int max(int a, int b) { return a>b?a:b; }
 float minf(float a, float b) { return a<b?a:b; }
 float maxf(float a, float b) { return a>b?a:b; }
 
@@ -710,6 +710,22 @@ class Adafruit_NeoPixel {
 		
 		}
 		
+		void setPixelColor( int n, int color ) { 
+		
+			int i, j;
+			int r = (color & 0xFF0000) >> 16;
+			int g = (color & 0x00FF00) >> 8;
+			int b = color & 0x0000FF;
+	
+			i = n / MAT_COLS;
+			j = (i%2)?(MAT_COLS - (n % MAT_COLS) - 1):(n % MAT_COLS);
+			
+			M[i][j][0] = (float) r / 255.0;
+			M[i][j][1] = (float) g / 255.0;
+			M[i][j][2] = (float) b / 255.0;
+		
+		}
+		
 		int getPixelColor( int n ) {
 			int i, j;
 			
@@ -717,6 +733,10 @@ class Adafruit_NeoPixel {
 			j = (i%2)?(MAT_COLS - (n % MAT_COLS) - 1):(n % MAT_COLS);
 			
 			return (((int) (M[i][j][0] * 255)) << 16) + (((int) (M[i][j][1] * 255)) << 8) + (int) (M[i][j][2] * 255);
+		}
+		
+		int Color( int r, int g, int b) {
+			return (r << 16) | (g << 8) | b;
 		}
 
 };
