@@ -13,9 +13,9 @@ int screenH = 480;
 float M[M_MAX][M_MAX][3] = { 0 };
 float RM[M_MAX][M_MAX][3] = { 0 };
 
-int MAT_COLS = 12;
-int MAT_LINES = 12;
-int LED_COUNT;
+int MAT_COLS_FX = 12;
+int MAT_LINES_FX = 12;
+int LED_COUNT_FX;
 
 int orthoX;
 int orthoY;
@@ -31,7 +31,7 @@ int max(int a, int b) { return a>b?a:b; }
 float minf(float a, float b) { return a<b?a:b; }
 float maxf(float a, float b) { return a>b?a:b; }
 
-void show() { int i, j, k; for(i = 0; i < MAT_LINES; i++) for(j = 0; j < MAT_COLS; j++) for(k = 0; k < 3; k++) RM[i][j][k] = M[i][j][k]; }
+void show() { int i, j, k; for(i = 0; i < MAT_LINES_FX; i++) for(j = 0; j < MAT_COLS_FX; j++) for(k = 0; k < 3; k++) RM[i][j][k] = M[i][j][k]; }
 
 void delay(int t) { usleep(t * 1000); }
 void begin() { }
@@ -70,8 +70,8 @@ void draw_matrix ()  {
 
 	int i, j;
 
-	for(i = 0; i < MAT_LINES; i++)
-		for(j = 0; j < MAT_COLS; j++)
+	for(i = 0; i < MAT_LINES_FX; i++)
+		for(j = 0; j < MAT_COLS_FX; j++)
 			paint(j, i, RM[i][j][0], RM[i][j][1], RM[i][j][2]);
 
 }
@@ -92,8 +92,8 @@ void refresh_screen(void) {
 }
 
 void add_M (int _r, int _g, int _b) {
-	for(int i = 0; i < MAT_LINES; i++) {
-		for(int j = 0; j < MAT_COLS; j++) {
+	for(int i = 0; i < MAT_LINES_FX; i++) {
+		for(int j = 0; j < MAT_COLS_FX; j++) {
 			M[i][j][0] = minf(1.0, M[i][j][0] + (float) _r / 255.0);
 			M[i][j][1] = minf(1.0, M[i][j][1] + (float) _g / 255.0);
 			M[i][j][2] = minf(1.0, M[i][j][2] + (float) _b / 255.0);
@@ -102,8 +102,8 @@ void add_M (int _r, int _g, int _b) {
 }
 
 void set_M (int _r, int _g, int _b) {
-	for(int i = 0; i < MAT_LINES; i++) {
-		for(int j = 0; j < MAT_COLS; j++) {
+	for(int i = 0; i < MAT_LINES_FX; i++) {
+		for(int j = 0; j < MAT_COLS_FX; j++) {
 			M[i][j][0] = (float) _r / 255.0;
 			M[i][j][1] = (float) _g / 255.0;
 			M[i][j][2] = (float) _b / 255.0;
@@ -112,8 +112,8 @@ void set_M (int _r, int _g, int _b) {
 }
 
 void inv_M () {
-	for(int i = 0; i < MAT_LINES; i++) {
-		for(int j = 0; j < MAT_COLS; j++) {
+	for(int i = 0; i < MAT_LINES_FX; i++) {
+		for(int j = 0; j < MAT_COLS_FX; j++) {
 			M[i][j][0] = 1.0 - M[i][j][0];
 			M[i][j][1] = 1.0 - M[i][j][1];
 			M[i][j][2] = 1.0 - M[i][j][2];
@@ -130,7 +130,7 @@ void inv_pixel_M( int i, int j ) {
 
 void inv_line_M ( int i ) {
 	int j;
-	for(j = 0; j < MAT_COLS; j++) {
+	for(j = 0; j < MAT_COLS_FX; j++) {
 		M[i][j][0] = 1.0 - M[i][j][0];
 		M[i][j][1] = 1.0 - M[i][j][1];
 		M[i][j][2] = 1.0 - M[i][j][2];
@@ -139,7 +139,7 @@ void inv_line_M ( int i ) {
 
 void inv_col_M (int j ) {
 	int i;
-	for(i = 0; i < MAT_LINES; i++) {
+	for(i = 0; i < MAT_LINES_FX; i++) {
 		M[i][j][0] = 1.0 - M[i][j][0];
 		M[i][j][1] = 1.0 - M[i][j][1];
 		M[i][j][2] = 1.0 - M[i][j][2];
@@ -157,7 +157,7 @@ void set_pixel_Mf( int i, int j, float _r, float _g, float _b) {
 
 void set_line_Mf( int i, float _r, float _g, float _b ) {
 	int j;
-	for(j = 0; j < MAT_COLS; j++) {
+	for(j = 0; j < MAT_COLS_FX; j++) {
 		M[i][j][0] = _r;
 		M[i][j][1] = _g;
 		M[i][j][2] = _b;
@@ -166,7 +166,7 @@ void set_line_Mf( int i, float _r, float _g, float _b ) {
 
 void set_col_Mf( int j, float _r, float _g, float _b ) {
 	int i;
-	for(i = 0; i < MAT_LINES; i++) {
+	for(i = 0; i < MAT_LINES_FX; i++) {
 		M[i][j][0] = _r;
 		M[i][j][1] = _g;
 		M[i][j][2] = _b;
@@ -181,7 +181,7 @@ void add_pixel_Mf( int i, int j, float _r, float _g, float _b ) {
 
 void add_line_Mf( int i, float _r, float _g, float _b ) {
 	int j = 0;
-	for(j = 0; j < MAT_COLS; j++) {
+	for(j = 0; j < MAT_COLS_FX; j++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + _r);
 		M[i][j][1] = minf(1.0, M[i][j][1] + _g);
 		M[i][j][2] = minf(1.0, M[i][j][2] + _b);
@@ -190,14 +190,14 @@ void add_line_Mf( int i, float _r, float _g, float _b ) {
 
 void add_col_Mf( int j, float _r, float _g, float _b ) {
 	int i = 0;
-	for(i = 0; i < MAT_LINES; i++) {
+	for(i = 0; i < MAT_LINES_FX; i++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + _r);
 		M[i][j][1] = minf(1.0, M[i][j][1] + _g);
 		M[i][j][2] = minf(1.0, M[i][j][2] + _b);
 	}
 }
 
-void clear () { int i; for (i = 0; i < MAT_LINES; i++) set_line_Mf(i, 0, 0, 0); }
+void clear () { int i; for (i = 0; i < MAT_LINES_FX; i++) set_line_Mf(i, 0, 0, 0); }
 
 void set_pixel_M( int i, int j, int _r, int _g, int _b ) {
 	
@@ -209,7 +209,7 @@ void set_pixel_M( int i, int j, int _r, int _g, int _b ) {
 
 void set_line_M( int i, int _r, int _g, int _b ) {
 	int j;
-	for(j = 0; j < MAT_COLS; j++) {
+	for(j = 0; j < MAT_COLS_FX; j++) {
 		M[i][j][0] = (float) _r / 255.0;
 		M[i][j][1] = (float) _g / 255.0;
 		M[i][j][2] = (float) _b / 255.0;
@@ -218,7 +218,7 @@ void set_line_M( int i, int _r, int _g, int _b ) {
 
 void set_col_M( int j, int _r, int _g, int _b ) {
 	int i;
-	for(i = 0; i < MAT_LINES; i++) {
+	for(i = 0; i < MAT_LINES_FX; i++) {
 		M[i][j][0] = (float) _r / 255.0;
 		M[i][j][1] = (float) _g / 255.0;
 		M[i][j][2] = (float) _b / 255.0;
@@ -233,7 +233,7 @@ void add_pixel_M( int i, int j, int _r, int _g, int _b ) {
 
 void add_line_M( int i, int _r, int _g, int _b ) {
 	int j = 0;
-	for(j = 0; j < MAT_COLS; j++) {
+	for(j = 0; j < MAT_COLS_FX; j++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + (float) _r / 255.0);
 		M[i][j][1] = minf(1.0, M[i][j][1] + (float) _g / 255.0);
 		M[i][j][2] = minf(1.0, M[i][j][2] + (float) _b / 255.0);
@@ -242,7 +242,7 @@ void add_line_M( int i, int _r, int _g, int _b ) {
 
 void add_col_M( int j, int _r, int _g, int _b ) {
 	int i = 0;
-	for(i = 0; i < MAT_LINES; i++) {
+	for(i = 0; i < MAT_LINES_FX; i++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + (float) _r / 255.0);
 		M[i][j][1] = minf(1.0, M[i][j][1] + (float) _g / 255.0);
 		M[i][j][2] = minf(1.0, M[i][j][2] + (float) _b / 255.0);
@@ -407,8 +407,8 @@ void * io_handler( void *user_data ) {
 				
 			case INV	:
 				if(strcmp(p1, "all") == 0 || strcmp(p1, "a") == 0) { 
-					for(_x = 0; _x < MAT_LINES; _x++) 
-						for(_y = 0; _y < MAT_COLS; _y++)
+					for(_x = 0; _x < MAT_LINES_FX; _x++) 
+						for(_y = 0; _y < MAT_COLS_FX; _y++)
 							inv_pixel_M(_x, _y);
 				} else if(strcmp(p1, "pixel") == 0 || strcmp(p1, "p") == 0) {
 					_x = toint(p2);
@@ -506,9 +506,9 @@ int main (int argc, char *argv[]) {
 	
 	setup();
 	
-	orthoX = 10 * MAT_COLS;
-	orthoY = 10 * MAT_LINES;
-	LED_COUNT = MAT_COLS * MAT_LINES;
+	orthoX = 10 * MAT_COLS_FX;
+	orthoY = 10 * MAT_LINES_FX;
+	LED_COUNT_FX = MAT_COLS_FX * MAT_LINES_FX;
 	
 	glutInit(&argc, argv);
 
@@ -552,7 +552,7 @@ void set_line_range ( int i, int start, int end, int r, int g, int b ) {
 		
 	}
 	
-	end = min(end, MAT_COLS);
+	end = min(end, MAT_COLS_FX);
 	
 	for(j = start; j < end; j++) {
 		M[i][j][0] = (float) r / 255.0;
@@ -574,7 +574,7 @@ void set_col_range ( int j, int start, int end, int r, int g, int b ) {
 		
 	}
 	
-	end = min(end, MAT_LINES);
+	end = min(end, MAT_LINES_FX);
 	
 	for(i = start; i < end; i++) {
 		M[i][j][0] = (float) r / 255.0;
@@ -596,7 +596,7 @@ void add_line_range ( int i, int start, int end, int r, int g, int b ) {
 		
 	}
 	
-	end = min(end, MAT_COLS);
+	end = min(end, MAT_COLS_FX);
 	
 	for(j = start; j < end; j++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + (float) r / 255.0);
@@ -618,7 +618,7 @@ void add_col_range ( int j, int start, int end, int r, int g, int b ) {
 		
 	}
 	
-	end = min(end, MAT_LINES);
+	end = min(end, MAT_LINES_FX);
 	
 	for(i = start; i < end; i++) {
 		M[i][j][0] = minf(1.0, M[i][j][0] + (float) r / 255.0);
@@ -638,7 +638,7 @@ void inv_line_range ( int i, int start, int end ) {
 		end = j;
 		
 	}
-	end = min(end, MAT_COLS);
+	end = min(end, MAT_COLS_FX);
 	
 	for(j = start; j < end; j++) {
 		M[i][j][0] = 1.0 - M[i][j][0];
@@ -658,7 +658,7 @@ void inv_col_range ( int j, int start, int end ) {
 		end = j;
 		
 	}
-	end = min(end, MAT_LINES);
+	end = min(end, MAT_LINES_FX);
 	
 	for(i = start; i < end; i++) {
 		M[i][j][0] = 1.0 - M[i][j][0];
@@ -671,8 +671,8 @@ void inv_col_range ( int j, int start, int end ) {
 void set_strip ( int n, int r, int g, int b ) {
 	int i, j;
 	
-	i = n / MAT_COLS;
-	j = (i%2)?(MAT_COLS - (n % MAT_COLS) - 1):(n % MAT_COLS);
+	i = n / MAT_COLS_FX;
+	j = (i%2)?(MAT_COLS_FX - (n % MAT_COLS_FX) - 1):(n % MAT_COLS_FX);
 	
 	M[i][j][0] = (float) r / 255.0;
 	M[i][j][1] = (float) g / 255.0;
@@ -680,7 +680,6 @@ void set_strip ( int n, int r, int g, int b ) {
 
 }
 
-#define LED_PIN 0
 #define NEO_KHZ800 0
 #define NEO_KHZ400 0
 #define NEO_GRB 0
@@ -691,18 +690,20 @@ class Adafruit_NeoPixel {
 
 	public :
 	
-		Adafruit_NeoPixel(int, int, int) { }
+		Adafruit_NeoPixel(int led_count, int led_pin, int garbage) { LED_COUNT_FX = led_count; }
+	
+		void fx_num_cols(int cols) { MAT_COLS_FX = cols; MAT_LINES_FX = LED_COUNT_FX / cols; }
 	
 		void begin() { }
-		void clear() { int i; for (i = 0; i < MAT_LINES; i++) set_line_Mf(i, 0, 0, 0); }
-		void show()  { int i, j, k; for(i = 0; i < MAT_LINES; i++) for(j = 0; j < MAT_COLS; j++) for(k = 0; k < 3; k++) RM[i][j][k] = M[i][j][k]; }
+		void clear() { int i; for (i = 0; i < MAT_LINES_FX; i++) set_line_Mf(i, 0, 0, 0); }
+		void show()  { int i, j, k; for(i = 0; i < MAT_LINES_FX; i++) for(j = 0; j < MAT_COLS_FX; j++) for(k = 0; k < 3; k++) RM[i][j][k] = M[i][j][k]; }
 		
 		void setPixelColor( int n, int r, int g, int b ) { 
 		
 			int i, j;
 	
-			i = n / MAT_COLS;
-			j = (i%2)?(MAT_COLS - (n % MAT_COLS) - 1):(n % MAT_COLS);
+			i = n / MAT_COLS_FX;
+			j = (i%2)?(MAT_COLS_FX - (n % MAT_COLS_FX) - 1):(n % MAT_COLS_FX);
 			
 			M[i][j][0] = (float) r / 255.0;
 			M[i][j][1] = (float) g / 255.0;
@@ -717,8 +718,8 @@ class Adafruit_NeoPixel {
 			int g = (color & 0x00FF00) >> 8;
 			int b = color & 0x0000FF;
 	
-			i = n / MAT_COLS;
-			j = (i%2)?(MAT_COLS - (n % MAT_COLS) - 1):(n % MAT_COLS);
+			i = n / MAT_COLS_FX;
+			j = (i%2)?(MAT_COLS_FX - (n % MAT_COLS_FX) - 1):(n % MAT_COLS_FX);
 			
 			M[i][j][0] = (float) r / 255.0;
 			M[i][j][1] = (float) g / 255.0;
@@ -729,8 +730,8 @@ class Adafruit_NeoPixel {
 		int getPixelColor( int n ) {
 			int i, j;
 			
-			i = n / MAT_COLS;
-			j = (i%2)?(MAT_COLS - (n % MAT_COLS) - 1):(n % MAT_COLS);
+			i = n / MAT_COLS_FX;
+			j = (i%2)?(MAT_COLS_FX - (n % MAT_COLS_FX) - 1):(n % MAT_COLS_FX);
 			
 			return (((int) (M[i][j][0] * 255)) << 16) + (((int) (M[i][j][1] * 255)) << 8) + (int) (M[i][j][2] * 255);
 		}

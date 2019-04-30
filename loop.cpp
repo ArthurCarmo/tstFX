@@ -1,13 +1,18 @@
 #include "fx.cpp"
 
+#define LED_PIN 0
+#define MAT_LINES 12
+#define MAT_COLS 12
+#define LED_COUNT 144
+
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 void setup () {
-	
-	MAT_COLS = 12; // width
-	MAT_LINES = 12; // height
 
-	strip.begin();
+	// Específico do simulador para desenhar o número correto de colunas
+	strip.fx_num_cols(MAT_COLS);
+	
+	strip.begin();	
 	strip.show ();
 	
 }
