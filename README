@@ -1,41 +1,9 @@
 loop.cpp 	- Função que fica em loop para criar o efeito.
 		  "imita" sintaxe do arduino
 fx.cpp   	- Gerencia o grid e a thread de efeitos
-arduino_fx 	- Versões das funções para o arduino
+
+digital_input.config - Permite abstrair caracteres do teclado como pinos de entrada do arduino
 
 Dependências: 
 
 	freeglut3-dev
-
-Manipulação do grid :
-
-// Colocar um determinado valor rgb na posição do grid
-set_pixel_M (x, y, r, g, b)
-set_line_M (x, r, g, b)
-set_col_M (y, r, g, b)
-
-// Adicionar um valor rgb ao que já está no grid
-add_pixel_M (x, y, r, g, b)
-add_line_M (x, r, g, b)
-add_col_M (y, r, g, b)
-
-// Inverte os valores rgb do grid
-inv_pixel_M (x, y)
-inv_line_M (x)
-inv_col_M (y)
-
-// Operações com range
-set_line_range (x, start, end, r, g, b)
-add_line_range (x, start, end, r, g, b)
-
-set_col_range (y, start, end, r, g, b)
-add_col_range (y, start, end, r, g, b)
-
-inv_line_range(x, start, end)
-inv_col_range (y, start, end)
-
-// Manipular todo o grid
-set_M (r, g, b)
-add_M (r, g, b)
-inv_M ()
-clear ()
