@@ -16,12 +16,17 @@ int32_t possible_colors[LED_COUNT] =
 0xFFFF00, 0x00FFFF, 0xFF00FF, 0xFFA500, 0x0
 };
 
-int32_t cursor_colors_min[LED_COUNT + 1];
-int32_t cursor_colors_max[LED_COUNT + 1];
+int32_t colors_inc[LED_COUNT] = {
+0x190000, 0x001900, 0x000019,
+0x191900, 0x001919, 0x190019, 0x191000, 0x0
+};
+
+int32_t cursor_color_inc[LED_COUNT+1];
 
 int cursor;
 int pick1;
 int pairs;
+int up;
 int32_t cursor_color = 0xFFFFFF;
 int32_t default_cursor_color = 0xFFFFFF;
 
@@ -36,36 +41,31 @@ void reset_game() {
 		while(pooled[pair1]) pair1 = random(LED_COUNT);
 		pooled[pair1] = 1;
 		board[pair1] = possible_colors[i];
+		cursor_color_inc[pair1] = colors_inc[i];
 		if(++total_paired == LED_COUNT) break;
 		while(pooled[pair2]) pair2 = random(LED_COUNT);
 		pooled[pair2] = 1;
 		board[pair2] = possible_colors[i];
+		cursor_color_inc[pair2] = colors_inc[i];
 		if(++total_paired == LED_COUNT) break;
 	}
 	
 	pick1 = -1;
 	pairs = 0;
+	up = 0;
+	
+	cursor_color_inc[LED_COUNT] = 0x191919;
 	
 	strip.setPixelColor(cursor, cursor_color);
 }
 
-int up = 0;
 void fade_correct() {
 	int index = open[cursor]?cursor:LED_COUNT;
-	int r = (cursor_color & 0xFF0000) >> 16;
-	int g = (cursor_color & 0x00FF00) >> 8;
-	int b = cursor_color & 0x0000FF;
-	if(++up > 15) {
-		r = max(r-5, 0);
-		g = max(g-5, 0);
-		b = max(b-5, 0);
-		cursor_color = (r << 16) + (g << 8) + b;
-		if(up == 30) up = 0;
+	if(++up > 4) {
+		cursor_color += cursor_color_inc[index];
+		if(up == 8) up = 0;
 	} else {
-		r = min(r+5, 0xFF);
-		g = min(g+5, 0xFF);
-		b = min(b+5, 0xFF);
-		cursor_color = (r << 16) + (g << 8) + b;
+		cursor_color -= cursor_color_inc[index];
 	}
 }
 
@@ -152,5 +152,5 @@ void setup() {
 void loop () {
 	show_board();
 	if(is_move) move();
-	delay(50);
+	delay(100);
 }
