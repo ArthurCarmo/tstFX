@@ -80,6 +80,10 @@ void show_board() {
 }
 
 void win_blink() {
+	strip.clear();
+	strip.show();
+	delay(200);
+	show_board();
 	delay(200);
 	strip.clear();
 	strip.show();
@@ -115,7 +119,8 @@ void move() {
 					open[pick1]  = 0;
 				} else {
 					pairs += 2;
-					if(pairs == LED_COUNT) { win_blink(); reset_game(); }
+					if(pairs == LED_COUNT) { cursor_color = board[cursor]; cursor = LED_COUNT;
+	strip.show(); delay(200); win_blink(); reset_game(); return; }
 				}
 				
 				pick1 = -1;
