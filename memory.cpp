@@ -61,9 +61,9 @@ void reset_game() {
 
 void fade_correct() {
 	int index = open[cursor]?cursor:LED_COUNT;
-	if(++up > 4) {
+	if(++up > 5) {
 		cursor_color += cursor_color_inc[index];
-		if(up == 8) up = 0;
+		if(up == 10) up = 0;
 	} else {
 		cursor_color -= cursor_color_inc[index];
 	}
