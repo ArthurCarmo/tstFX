@@ -221,6 +221,7 @@ void set_strip ( int n, int r, int g, int b ) {
 
 void setup () {
 	
+	attachInterrupt(2, inv_M, RISING);
 	strip.begin();
 	strip.show ();
 	
