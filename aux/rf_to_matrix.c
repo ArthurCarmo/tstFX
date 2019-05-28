@@ -2,5 +2,34 @@
 
 int main() {
 
+	FILE *f;
+	
+	f = fopen("rf", "r");
+	
+	int i, j;
+	char c;
+	
+	for(i = 0; i < 39; i++) {
+		printf("{");
+		for(j = 0; j < 36; j++) {
+			switch(fgetc(f)) {
+				case ' ' : printf("vazio");
+					break;
+				case 'B' : printf("blue");
+					break;
+				case 'K' : printf("gold");
+					break;
+				case 'W' : printf("wall");
+					break;
+				default : printf("vazio");
+					break;
+			}
+			if(j != 35) printf(",");
+		}
+		fgetc(f);
+		printf("}");
+		if(i != 38) printf(",");
+	} printf("\n");
+
 	return 0;
 }
