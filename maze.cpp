@@ -25,10 +25,11 @@ int apple_y;
 int new_seed = 0;
 
 const uint32_t
-wall_color 		= 0xFF0000,
-portal_in_color 	= 0x00FF00,
-portal_out_color 	= 0x0000FF,
-player_color		= 0xFFFFFF,
+wall	 		= 0xFF0000,
+portal_in 		= 0x00FF00,
+portal_out	 	= 0x0000FF,
+player			= 0xFFFFFF,
+vazio			= 0x000000,
 red			= 0xFF0000,
 green			= 0x00FF00,
 blue			= 0x0000FF,
@@ -38,15 +39,15 @@ pl_olho			= 0x000000,
 pl_bigode		= 0xE3E3E3,
 pl_cenoura_cabo		= 0x098500,
 pl_cenoura		= 0xFF8103,
-vazio			= 0xFFFFFF;
+pl_vazio		= 0xFFFFFF;
 
 const uint32_t pernalonga[7][6] = 
 {
-	{vazio, pl_orelha, vazio, pl_orelha, vazio, vazio },
-	{vazio, pl_orelha, vazio, pl_orelha, vazio, vazio },
-	{vazio, pl_orelha, vazio, pl_orelha, vazio, vazio },
-	{vazio, pl_cabeca, pl_cabeca, pl_cabeca, vazio, pl_cenoura_cabo },
-	{vazio, pl_olho, pl_cabeca, pl_olho, vazio, pl_cenoura },
+	{pl_vazio, pl_orelha, pl_vazio, pl_orelha, pl_vazio, pl_vazio },
+	{pl_vazio, pl_orelha, pl_vazio, pl_orelha, pl_vazio, pl_vazio },
+	{pl_vazio, pl_orelha, pl_vazio, pl_orelha, pl_vazio, pl_vazio },
+	{pl_vazio, pl_cabeca, pl_cabeca, pl_cabeca, pl_vazio, pl_cenoura_cabo },
+	{pl_vazio, pl_olho, pl_cabeca, pl_olho, pl_vazio, pl_cenoura },
 	{pl_bigode, pl_bigode, pl_bigode, pl_bigode, pl_bigode, pl_cenoura },
 	{pl_bigode, pl_bigode, pl_bigode, pl_bigode, pl_bigode, pl_cenoura }
 };
@@ -104,10 +105,61 @@ void draw_tnmt(char turtle, int x, int y) {
 	strip.setPixelColor(map_px(x+1, y+5), t_cl);
 }
 
-const uint32_t maze[36][36] = 
+#define MAZE_SIZE 36
+#define MAZE_SIZE 36
+const uint32_t maze[MAZE_SIZE][MAZE_SIZE] = 
 { 
-	0
+	// 1	   2      3      4      5      6      7	     8      9     10     11     12     13     14     15     16     17     18     19     20     21     22     23     24     25     26     27     28     29     30     31     32     33     34     35     36
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio,  wall, vazio, vazio, vazio,  blue, vazio, vazio, vazio,  wall, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio,  wall, vazio, vazio, vazio, vazio, vazio, vazio, vazio,  wall, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio,  wall,  blue,  blue,  blue,  blue,  blue,  blue,  blue,  blue,  blue,  wall, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
+	
 };
+
+int 
+player_local_l,
+player_local_c,
+player_global_l,
+player_global_c,
+
+bottom_left_l,
+bottom_left_c;
+
+uint32_t view[ROWS][COLS] = { 0 };
+
+void update_view() {
+	for(int i = 0; i < 12; i++) {
+		for(int j = 0; j < 12; j++) {
+			view[i][j] = maze[i+bottom_left_l][j+bottom_left_c];
+		}
+	}
+	
+	for(int i = 0; i < 12; i++) {
+		for(int j = 0; j < 12; j++) {
+			strip.setPixelColor(map_px(i, j), view[i][j]);
+		}
+	}
+}
 
 void setup () {
 
@@ -117,7 +169,7 @@ void setup () {
 	pinMode(RIGHT, INPUT);
 	strip.begin();
 
-	for(int i = 0; i < 7; i++) {
+/*	for(int i = 0; i < 7; i++) {
 		for(int j = 0; j < 6; j++) {
 			strip.setPixelColor(map_px(i, j), pernalonga[i][j]);
 		}
@@ -129,8 +181,21 @@ void setup () {
 		}
 	}
 	
-	draw_tnmt('r', 0, 6);
-
+	draw_tnmt('r', 0, 6); */
+	
+	
+	player_local_l = 0;
+	player_local_c = 5;
+	
+	player_global_l = 0;
+	player_global_c = 19;
+	
+	bottom_left_l = 0;
+	bottom_left_c = 13;
+	
+	update_view();
+	strip.setPixelColor(map_px(player_local_l, player_local_c), player);
+	
 	strip.show ();	
 }
 
@@ -141,5 +206,5 @@ void reset_game() {
 
 void loop () {
 	
-	strip.show();
+//	strip.show();
 }
