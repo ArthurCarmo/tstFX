@@ -26,19 +26,24 @@ int apple_y;
 int new_seed = 0;
 
 const uint32_t
-wall	 		= 0xFF0000,
-portal_in 		= 0x00FF00,
-portal_out	 	= 0x0000FF,
+wall	 		= 0xA3AEA6,
+portal_in 		= 0x00F800,
+portal_out	 	= 0x0000F8,
 player			= 0xFFFFFF,
 vazio			= 0x000000,
 red			= 0xFF0000,
 green			= 0x00FF00,
 blue			= 0x0000FF,
 gold			= 0xFFDF00,
-weak_blue		= 0x000055,
+purple			= 0xFF00FF,
+weak_red		= 0x550000,
 weak_green		= 0x005500,
+weak_blue		= 0x000055,
 weak_gold		= 0xc6a600,
+weak_purple		= 0x550055,
 
+purple_switch		= 0xFE00FE,
+glider			= 0x00FEFE,
 
 pl_orelha		= 0x8F8F8F,
 pl_cabeca		= 0xADADAD,
@@ -113,8 +118,8 @@ void draw_tnmt(char turtle, int x, int y) {
 }
 
 #define MAZE_LINES 39
-#define MAZE_COLUMNS 36
-const uint32_t maze[MAZE_LINES][MAZE_COLUMNS] = 
+#define MAZE_COLUMNS 37
+uint32_t maze[MAZE_LINES][MAZE_COLUMNS] = 
 { 
 	#include "parcial_map"
 };
@@ -127,17 +132,25 @@ player_l,
 player_c,
 
 top_left_l,
-top_left_c;
+top_left_c,
+
+has_blue,
+has_green,
+has_red,
+has_gold,
+has_purple;
+
 
 int centered;
 
 uint32_t view[ROWS][COLS] = { 0 };
 
 uint32_t menu[ROWS] = 
-{ 	weak_gold, weak_gold, weak_gold,
-	pl_vazio, weak_blue, weak_blue,
-	weak_blue, pl_vazio, weak_green,
-	weak_green, weak_green, pl_vazio
+{ 	
+	weak_blue, weak_blue, weak_blue, 
+	weak_green, weak_green, weak_green,
+	weak_red, weak_red, weak_red,
+	weak_gold, weak_gold, weak_gold
 };
 
 int line_center = 8;
@@ -159,10 +172,63 @@ void center_screen() {
 	}
 }
 
+void change_all(uint32_t c1, uint32_t c2) {
+	for(int i = 0; i < MAZE_LINES; i++) {
+		for(int j = 0; j < MAZE_COLUMNS; j++) {
+			if(maze[i][j] == c1) maze[i][j] = c2;
+		}
+	}
+}
+
+void swap_all(uint32_t c1, uint32_t c2) {
+	for(int i = 0; i < MAZE_LINES; i++) {
+		for(int j = 0; j < MAZE_COLUMNS; j++) {
+			if(maze[i][j] == c1) maze[i][j] = c2;
+			else if(maze[i][j] == c2) maze[i][j] = c1;
+		}
+	}
+}
+
 void draw_items() {
 	for(int i = 0; i < ROWS; i++) {
 		strip.setPixelColor(map_px(i, COLS-1), menu[i]);
 	}
+}
+
+void set_collectibles() {
+	switch(maze[player_l][player_c]) {
+		case vazio : return;
+		case red : 
+			if(has_red) return; 
+			has_red = 1; 
+			change_all(weak_red, red); 
+			menu[6] = menu[7] = menu[8] = red;
+			break;
+		case green :
+			if(has_green) return;
+			has_green = 1;
+			change_all(weak_green, green);
+			menu[3] = menu[4] = menu[5] = green;
+			break;
+		case blue :
+			if(has_blue) return;
+			has_blue = 1;
+			change_all(weak_blue, blue);
+			menu[0] = menu[1] = menu[2] = blue;
+			break;
+		case gold :
+			if(has_gold) return;
+			has_gold = 1;
+			change_all(weak_gold, gold);
+			menu[9] = menu[10] = menu[11] = gold;
+			break;
+		case purple :
+			swap_all(weak_purple, purple);
+			break;
+			
+	}
+	
+	draw_items();
 }
 
 void update_view() {
@@ -205,6 +271,8 @@ void setup () {
 	top_left_l = MAZE_LINES - ROWS;
 	top_left_c = 13;
 	
+	has_blue = has_green = has_red = has_gold = has_purple = 0;
+	
 	draw_items();
 	update_view();
 	
@@ -238,9 +306,13 @@ void player_up() {
 	if(player_l > 0
 	&&(maze[player_l-1][player_c] == vazio 
 	|| maze[player_l-1][player_c] == blue 
-	|| maze[player_l-1][player_c] == green) )
+	|| maze[player_l-1][player_c] == green
+	|| maze[player_l-1][player_c] == red
+	|| maze[player_l-1][player_c] == purple
+	|| maze[player_l-1][player_c] == gold) )
 	{ 
 		--player_l;
+		set_collectibles();
 		update_view();
 	}
 }
@@ -248,9 +320,13 @@ void player_down() {
 	if(player_l < MAZE_LINES - 1
 	&&(maze[player_l+1][player_c] == vazio 
 	|| maze[player_l+1][player_c] == blue 
-	|| maze[player_l+1][player_c] == green) )
+	|| maze[player_l+1][player_c] == green
+	|| maze[player_l+1][player_c] == red
+	|| maze[player_l+1][player_c] == purple
+	|| maze[player_l+1][player_c] == gold) )
 	{ 
 		++player_l;
+		set_collectibles();
 		update_view();
 	}
 }
@@ -258,9 +334,13 @@ void player_left() {
 	if(player_c > 0
 	&&(maze[player_l][player_c-1] == vazio 
 	|| maze[player_l][player_c-1] == blue 
-	|| maze[player_l][player_c-1] == green) )
-	{ 
+	|| maze[player_l][player_c-1] == green
+	|| maze[player_l][player_c-1] == red
+	|| maze[player_l][player_c-1] == purple
+	|| maze[player_l][player_c-1] == gold) )
+	{
 		--player_c;
+		set_collectibles();
 		update_view();
 	}
 }
@@ -268,9 +348,13 @@ void player_right() {
 	if(player_c < MAZE_COLUMNS - 2
 	&&(maze[player_l][player_c+1] == vazio 
 	|| maze[player_l][player_c+1] == blue 
-	|| maze[player_l][player_c+1] == green) )
+	|| maze[player_l][player_c+1] == green
+	|| maze[player_l][player_c+1] == red
+	|| maze[player_l][player_c+1] == purple
+	|| maze[player_l][player_c+1] == gold) )
 	{
 		++player_c;
+		set_collectibles();
 		update_view();
 	}
 }

@@ -25,7 +25,8 @@ const char *jake[5][5] =
 	{ "jake_cabeca", "jake_cabeca", "jake_cabeca", "jake_cabeca", "jake_cabeca" }
 };
 
-
+#define LINES 39
+#define COLS  37
 int main() {
 
 	FILE *f;
@@ -38,11 +39,13 @@ int main() {
 	int cni;
 	
 	pli = plj = jki = jkj = cni = 0;
-	for(i = 0; i < 39; i++) {
+	for(i = 0; i < LINES; i++) {
 		printf("{");
-		for(j = 0; j < 36; j++) {
+		for(j = 0; j < COLS; j++) {
 			switch(fgetc(f)) {
 				case ' ' : printf("vazio");
+					break;
+				case 'R' : printf("red");
 					break;
 				case 'G' : printf("green");
 					break;
@@ -50,11 +53,21 @@ int main() {
 					break;
 				case 'K' : printf("gold");
 					break;
+				case 'P' : printf("purple");
+					break;
+				case 'r' : printf("weak_red");
+					break;
 				case 'g' : printf("weak_green");
 					break;
 				case 'b' : printf("weak_blue");
 					break;
 				case 'k' : printf("weak_gold");
+					break;
+				case 'p' : printf("weak_purple");
+					break;
+				case 'Q' : printf("purple_switch");
+					break;
+				case 'D' : printf("glider");
 					break;
 				case 'W' : printf("wall");
 					break;
@@ -70,11 +83,11 @@ int main() {
 				default : printf("vazio");
 					break;
 			}
-			if(j != 35) printf(",");
+			if(j != COLS-1) printf(",");
 		}
 		fgetc(f);
 		printf("}");
-		if(i != 38) printf(",");
+		if(i != LINES-1) printf(",");
 	} printf("\n");
 
 	return 0;
