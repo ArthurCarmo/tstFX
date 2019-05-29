@@ -182,7 +182,7 @@ void update_view() {
 	}
 
 	if(player_l >= top_left_l && player_l < top_left_l + ROWS 
-	&& player_c >= top_left_c && player_c < top_left_c + COLS) {
+	&& player_c >= top_left_c && player_c < top_left_c + COLS - 1) {
 		strip.setPixelColor(map_px(player_l-top_left_l, player_c-top_left_c), player);
 	}
 	
@@ -276,7 +276,8 @@ void loop () {
 		player_right();
 		delay(100);
 	} else if(digitalRead(CENTER)) {
-		center_screen();
+		centered = 1 - centered;
+		update_view();
 		delay(100);
 	}
 //	strip.show();
