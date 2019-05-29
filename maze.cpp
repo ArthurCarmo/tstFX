@@ -33,6 +33,12 @@ vazio			= 0x000000,
 red			= 0xFF0000,
 green			= 0x00FF00,
 blue			= 0x0000FF,
+gold			= 0xFFDF00,
+weak_blue		= 0x000055,
+weak_green		= 0x005500,
+weak_gold		= 0xc6a600,
+
+
 pl_orelha		= 0x8F8F8F,
 pl_cabeca		= 0xADADAD,
 pl_olho			= 0x000000,
@@ -105,35 +111,11 @@ void draw_tnmt(char turtle, int x, int y) {
 	strip.setPixelColor(map_px(x+1, y+5), t_cl);
 }
 
-#define MAZE_SIZE 36
-#define MAZE_SIZE 36
-const uint32_t maze[MAZE_SIZE][MAZE_SIZE] = 
+#define MAZE_LINES 39
+#define MAZE_COLUMNS 36
+const uint32_t maze[MAZE_LINES][MAZE_COLUMNS] = 
 { 
-	// 1	   2      3      4      5      6      7	     8      9     10     11     12     13     14     15     16     17     18     19     20     21     22     23     24     25     26     27     28     29     30     31     32     33     34     35     36
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio,  wall, vazio, vazio, vazio,  blue, vazio, vazio, vazio,  wall, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio,  wall, vazio, vazio, vazio, vazio, vazio, vazio, vazio,  wall, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio,  wall,  blue,  blue,  blue,  blue,  blue,  blue,  blue,  blue,  blue,  wall, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	{ vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio, vazio },
-	
+	#include "aux/parcial_map"
 };
 
 int 
@@ -142,23 +124,38 @@ player_local_c,
 player_global_l,
 player_global_c,
 
-bottom_left_l,
-bottom_left_c;
+top_left_l,
+top_left_c;
 
 uint32_t view[ROWS][COLS] = { 0 };
 
+uint32_t menu[ROWS] = 
+{ 	weak_gold, weak_gold, weak_gold,
+	pl_vazio, weak_blue, weak_blue,
+	weak_blue, pl_vazio, weak_green,
+	weak_green, weak_green, pl_vazio
+};
+
+void draw_items() {
+	for(int i = 0; i < ROWS; i++) {
+		strip.setPixelColor(map_px(i, COLS-1), menu[i]);
+	}
+}
+
 void update_view() {
-	for(int i = 0; i < 12; i++) {
-		for(int j = 0; j < 12; j++) {
-			view[i][j] = maze[i+bottom_left_l][j+bottom_left_c];
+	for(int i = 0; i < ROWS; i++) {
+		for(int j = 0; j < COLS-1; j++) {
+			view[i][j] = maze[i+top_left_l][j+top_left_c];
 		}
 	}
 	
-	for(int i = 0; i < 12; i++) {
-		for(int j = 0; j < 12; j++) {
+	for(int i = 0; i < ROWS; i++) {
+		for(int j = 0; j < COLS-1; j++) {
 			strip.setPixelColor(map_px(i, j), view[i][j]);
 		}
 	}
+	
+	strip.show();
 }
 
 void setup () {
@@ -184,18 +181,25 @@ void setup () {
 	draw_tnmt('r', 0, 6); */
 	
 	
-	player_local_l = 0;
+	player_local_l = ROWS - 2;
 	player_local_c = 5;
 	
-	player_global_l = 0;
+	player_global_l = 38;
 	player_global_c = 19;
 	
-	bottom_left_l = 0;
-	bottom_left_c = 13;
+	top_left_l = MAZE_LINES - ROWS;
+	top_left_c = 13;
 	
+	draw_items();
 	update_view();
 	strip.setPixelColor(map_px(player_local_l, player_local_c), player);
-	
+
+/*	for(int i = 0; i < 12; i++) {
+		for(int j = 0; j < 12; j++) {
+			strip.setPixelColor(map_px(i, j), maze[i+15][j+2]);
+		}
+	}
+*/
 	strip.show ();	
 }
 
@@ -204,7 +208,37 @@ void reset_game() {
 	
 }
 
+void screen_up() {
+	if(top_left_l > 0) --top_left_l;
+	update_view();
+}
+
+void screen_down() {
+	if(top_left_l < MAZE_LINES - ROWS) ++top_left_l;
+	update_view();
+}
+void screen_left() {
+	if(top_left_c > 0) --top_left_c;
+	update_view();
+}
+void screen_right() {
+	if(top_left_c < MAZE_COLUMNS - COLS) ++top_left_c;
+	update_view();
+}
+
 void loop () {
-	
+	if(digitalRead(UP)) {
+		screen_up();
+		delay(100);
+	} else if(digitalRead(DOWN)) {
+		screen_down();
+		delay(100);
+	} else if(digitalRead(LEFT)) {
+		screen_left();
+		delay(100);
+	} else if(digitalRead(RIGHT)) {
+		screen_right();
+		delay(100);
+	}
 //	strip.show();
 }

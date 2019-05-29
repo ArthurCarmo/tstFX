@@ -10,5 +10,5 @@ if [[ $# -eq 1 ]]; then
 	exit
 fi
 
-g++ $1 -o $2 -lGLU -lglut -lGL -lpthread
+g++ $1 -o $2 -lGLU -lglut -lGL -lpthread -Wall
 
