@@ -12,6 +12,7 @@ char last_dir = 's';
 #define DOWN	6
 #define LEFT	5
 #define RIGHT	4
+#define CENTER  3
 #define INTERRUPT 2
 
 int map_px ( int l, int c ) {
@@ -119,11 +120,16 @@ const uint32_t maze[MAZE_LINES][MAZE_COLUMNS] =
 };
 
 int 
+start_l = 37,
+start_c = 18,
+
 player_l,
 player_c,
 
 top_left_l,
 top_left_c;
+
+int centered;
 
 uint32_t view[ROWS][COLS] = { 0 };
 
@@ -134,6 +140,25 @@ uint32_t menu[ROWS] =
 	weak_green, weak_green, pl_vazio
 };
 
+int line_center = 8;
+int col_center  = 5;
+void center_screen() {
+	if(player_l > MAZE_LINES - (ROWS - line_center)) { 
+		top_left_l = MAZE_LINES - ROWS;
+	} else if (player_l < line_center) {
+		top_left_l = 0;
+	} else {
+		top_left_l = player_l - line_center;
+	}
+	if(player_c > MAZE_COLUMNS - (COLS - col_center)) { 
+		top_left_c = MAZE_COLUMNS - COLS;
+	} else if (player_c < col_center) {
+		top_left_c = 0;
+	} else {
+		top_left_c = player_c - col_center;
+	}
+}
+
 void draw_items() {
 	for(int i = 0; i < ROWS; i++) {
 		strip.setPixelColor(map_px(i, COLS-1), menu[i]);
@@ -141,6 +166,9 @@ void draw_items() {
 }
 
 void update_view() {
+
+	if(centered) center_screen();	
+	
 	for(int i = 0; i < ROWS; i++) {
 		for(int j = 0; j < COLS-1; j++) {
 			view[i][j] = maze[i+top_left_l][j+top_left_c];
@@ -152,7 +180,7 @@ void update_view() {
 			strip.setPixelColor(map_px(i, j), view[i][j]);
 		}
 	}
-	
+
 	if(player_l >= top_left_l && player_l < top_left_l + ROWS 
 	&& player_c >= top_left_c && player_c < top_left_c + COLS) {
 		strip.setPixelColor(map_px(player_l-top_left_l, player_c-top_left_c), player);
@@ -169,35 +197,16 @@ void setup () {
 	pinMode(RIGHT, INPUT);
 	strip.begin();
 
-/*	for(int i = 0; i < 7; i++) {
-		for(int j = 0; j < 6; j++) {
-			strip.setPixelColor(map_px(i, j), pernalonga[i][j]);
-		}
-	}
+	centered = 1;	
+	player_l = start_l;
+	player_c = start_c;
 
-	for(int i = 0; i < 5; i++) {
-		for(int j = 0; j < 5; j++) {
-			strip.setPixelColor(map_px(i+7, j), jake[i][j]);
-		}
-	}
-	
-	draw_tnmt('r', 0, 6); */
-	
-	player_l = 37;
-	player_c = 18;
-	
 	top_left_l = MAZE_LINES - ROWS;
 	top_left_c = 13;
 	
 	draw_items();
 	update_view();
-
-/*	for(int i = 0; i < 12; i++) {
-		for(int j = 0; j < 12; j++) {
-			strip.setPixelColor(map_px(i, j), maze[i+15][j+2]);
-		}
-	}
-*/
+	
 	strip.show ();	
 }
 
@@ -224,18 +233,50 @@ void screen_right() {
 	update_view();
 }
 
+void player_up() {
+	if(player_l > 0) { 
+		--player_l;
+		update_view();
+	}
+}
+void player_down() {
+	if(player_l < MAZE_LINES - 1) { 
+		++player_l;
+		update_view();
+	}
+}
+void player_left() {
+	if(player_c > 0) { 
+		--player_c;
+		update_view();
+	}
+}
+void player_right() {
+	if(player_c < MAZE_COLUMNS - 2) {
+		++player_c;
+		update_view();
+	}
+}
+
 void loop () {
 	if(digitalRead(UP)) {
-		screen_up();
+//		screen_up();
+		player_up();
 		delay(100);
 	} else if(digitalRead(DOWN)) {
-		screen_down();
+//		screen_down();
+		player_down();
 		delay(100);
 	} else if(digitalRead(LEFT)) {
-		screen_left();
+//		screen_left();
+		player_left();
 		delay(100);
 	} else if(digitalRead(RIGHT)) {
-		screen_right();
+//		screen_right();
+		player_right();
+		delay(100);
+	} else if(digitalRead(CENTER)) {
+		center_screen();
 		delay(100);
 	}
 //	strip.show();
