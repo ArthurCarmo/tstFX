@@ -195,6 +195,7 @@ void setup () {
 	pinMode(DOWN, INPUT);
 	pinMode(LEFT, INPUT);
 	pinMode(RIGHT, INPUT);
+	pinMode(CENTER, INPUT);
 	strip.begin();
 
 	centered = 1;	
@@ -234,25 +235,41 @@ void screen_right() {
 }
 
 void player_up() {
-	if(player_l > 0) { 
+	if(player_l > 0
+	&&(maze[player_l-1][player_c] == vazio 
+	|| maze[player_l-1][player_c] == blue 
+	|| maze[player_l-1][player_c] == green) )
+	{ 
 		--player_l;
 		update_view();
 	}
 }
 void player_down() {
-	if(player_l < MAZE_LINES - 1) { 
+	if(player_l < MAZE_LINES - 1
+	&&(maze[player_l+1][player_c] == vazio 
+	|| maze[player_l+1][player_c] == blue 
+	|| maze[player_l+1][player_c] == green) )
+	{ 
 		++player_l;
 		update_view();
 	}
 }
 void player_left() {
-	if(player_c > 0) { 
+	if(player_c > 0
+	&&(maze[player_l][player_c-1] == vazio 
+	|| maze[player_l][player_c-1] == blue 
+	|| maze[player_l][player_c-1] == green) )
+	{ 
 		--player_c;
 		update_view();
 	}
 }
 void player_right() {
-	if(player_c < MAZE_COLUMNS - 2) {
+	if(player_c < MAZE_COLUMNS - 2
+	&&(maze[player_l][player_c+1] == vazio 
+	|| maze[player_l][player_c+1] == blue 
+	|| maze[player_l][player_c+1] == green) )
+	{
 		++player_c;
 		update_view();
 	}
