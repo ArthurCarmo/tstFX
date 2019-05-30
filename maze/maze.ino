@@ -116,7 +116,8 @@ void draw_tnmt(char turtle, int x, int y) {
 #define MAZE_LINES 39
 #define MAZE_COLUMNS 37
 uint32_t maze[MAZE_LINES][MAZE_COLUMNS] = 
-{ 	{vazio,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,wall,vazio,vazio,vazio,vazio,red,vazio,vazio,vazio,vazio,weak_red,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,wall,wall,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,glider,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,wall,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,glider,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,wall,vazio,wall,wall,vazio,vazio,vazio,wall,wall,wall,wall,vazio,glider,glider,glider,vazio,vazio,glider,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,wall,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,purple_switch,vazio,vazio,glider,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,wall,wall,wall,wall,weak_purple,weak_purple,weak_purple,wall,wall,purple,wall,vazio,vazio,vazio,vazio,vazio,glider,glider,glider,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio},{vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,wall,wall,wall,wall,wall,wall,wall,weak_purple,weak_purple,weak_purple,weak_purple,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio},{vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,weak_purple,vazio,vazio,purple,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio},{vazio,wall,weak_red,weak_red,weak_red,weak_red,weak_red,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,weak_purple,weak_purple,weak_purple,weak_purple,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio},{vazio,vazio,wall,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio},{vazio,vazio,vazio,vazio,wall,weak_red,weak_red,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,purple,purple,purple,purple,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio},{vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio},{vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,jake_cabeca,jake_cabeca,jake_cabeca,jake_cabeca,jake_cabeca,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,wall,wall,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio},{vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,jake_cabeca,jake_olho,jake_cabeca,jake_olho,jake_cabeca,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,wall,wall,wall,wall,wall,wall,wall,wall,vazio,vazio},{vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,jake_cabeca,jake_bigode,jake_focinho,jake_bigode,jake_cabeca,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,weak_gold,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,jake_cabeca,jake_bigode,jake_cabeca,jake_bigode,jake_cabeca,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,weak_gold,vazio,vazio,vazio,wall,wall,wall,wall,wall,wall,weak_gold,weak_gold,weak_gold,vazio},{vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,jake_cabeca,jake_cabeca,jake_cabeca,jake_cabeca,jake_cabeca,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,weak_gold,weak_gold,weak_gold,wall,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio},{vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,vazio,wall,wall,wall,weak_red,weak_red,weak_red,weak_red,wall,wall,wall,wall,wall,wall,wall,wall,wall,weak_green,weak_green,weak_green,weak_green,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio},{vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,weak_red,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,wall,vazio,vazio,pl_vazio,pl_orelha,pl_vazio,pl_orelha,pl_vazio,pl_vazio,weak_red,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,wall,vazio,vazio,pl_vazio,pl_orelha,pl_vazio,pl_orelha,pl_vazio,vazio,vazio,weak_red,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,wall,vazio,vazio,pl_vazio,pl_orelha,pl_vazio,pl_orelha,pl_vazio,pl_vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,wall,vazio,vazio,pl_vazio,pl_cabeca,pl_cabeca,pl_cabeca,pl_vazio,pl_cenoura_cabo,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,wall,vazio,vazio,vazio,wall,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,wall,vazio,vazio,pl_vazio,pl_olho,pl_cabeca,pl_olho,pl_vazio,pl_cenoura,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,green,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,wall,vazio,vazio,pl_bigode,pl_bigode,pl_bigode,pl_bigode,pl_bigode,pl_cenoura,vazio,vazio,wall,vazio,vazio,vazio,vazio,gold,vazio,vazio,vazio,vazio,wall,vazio,vazio,wall,vazio,vazio,vazio,wall,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,wall,vazio,vazio,pl_bigode,pl_bigode,pl_bigode,pl_bigode,pl_bigode,pl_cenoura,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,wall,wall,wall,wall,wall,wall,wall,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio},{vazio,vazio,vazio,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,weak_blue,weak_blue,weak_blue,weak_blue,weak_blue,weak_blue,weak_blue,weak_blue,weak_blue,wall,wall,wall,wall,wall,wall,wall,wall,wall,wall,vazio,vazio,vazio,vazio},{vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,blue,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,wall,vazio,vazio,vazio,wall,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio},{vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio,vazio}
+{ 
+	#include "parcial_map"
 };
 
 int 
@@ -218,9 +219,14 @@ void set_collectibles() {
 			menu[9] = menu[10] = menu[11] = gold;
 			break;
 		case purple :
+			if(has_purple) return;
 			swap_all(weak_purple, purple);
 			break;
-			
+		case purple_switch :
+			if(has_purple) return;
+			has_purple = 1;
+			change_all(weak_purple, purple);
+			break;
 	}
 	
 	draw_items();
@@ -304,6 +310,7 @@ void player_up() {
 	|| maze[player_l-1][player_c] == green
 	|| maze[player_l-1][player_c] == red
 	|| maze[player_l-1][player_c] == purple
+	|| maze[player_l-1][player_c] == purple_switch
 	|| maze[player_l-1][player_c] == gold) )
 	{ 
 		--player_l;
@@ -318,6 +325,7 @@ void player_down() {
 	|| maze[player_l+1][player_c] == green
 	|| maze[player_l+1][player_c] == red
 	|| maze[player_l+1][player_c] == purple
+	|| maze[player_l+1][player_c] == purple_switch
 	|| maze[player_l+1][player_c] == gold) )
 	{ 
 		++player_l;
@@ -332,6 +340,7 @@ void player_left() {
 	|| maze[player_l][player_c-1] == green
 	|| maze[player_l][player_c-1] == red
 	|| maze[player_l][player_c-1] == purple
+	|| maze[player_l][player_c-1] == purple_switch
 	|| maze[player_l][player_c-1] == gold) )
 	{
 		--player_c;
@@ -346,6 +355,7 @@ void player_right() {
 	|| maze[player_l][player_c+1] == green
 	|| maze[player_l][player_c+1] == red
 	|| maze[player_l][player_c+1] == purple
+	|| maze[player_l][player_c+1] == purple_switch
 	|| maze[player_l][player_c+1] == gold) )
 	{
 		++player_c;

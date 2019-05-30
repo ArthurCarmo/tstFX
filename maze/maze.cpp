@@ -1,8 +1,5 @@
 #include "../fx.cpp"
 
-char dir = 's';
-char last_dir = 's';
-
 #define LED_PIN 1
 #define ROWS 12
 #define COLS 12
@@ -13,7 +10,6 @@ char last_dir = 's';
 #define LEFT	5
 #define RIGHT	4
 #define CENTER  3
-#define INTERRUPT 2
 
 int map_px ( int l, int c ) {
 	return l *  COLS + ((l % 2)?COLS-c-1:c);
@@ -223,9 +219,14 @@ void set_collectibles() {
 			menu[9] = menu[10] = menu[11] = gold;
 			break;
 		case purple :
+			if(has_purple) return;
 			swap_all(weak_purple, purple);
 			break;
-			
+		case purple_switch :
+			if(has_purple) return;
+			has_purple = 1;
+			change_all(weak_purple, purple);
+			break;
 	}
 	
 	draw_items();
@@ -309,6 +310,7 @@ void player_up() {
 	|| maze[player_l-1][player_c] == green
 	|| maze[player_l-1][player_c] == red
 	|| maze[player_l-1][player_c] == purple
+	|| maze[player_l-1][player_c] == purple_switch
 	|| maze[player_l-1][player_c] == gold) )
 	{ 
 		--player_l;
@@ -323,6 +325,7 @@ void player_down() {
 	|| maze[player_l+1][player_c] == green
 	|| maze[player_l+1][player_c] == red
 	|| maze[player_l+1][player_c] == purple
+	|| maze[player_l+1][player_c] == purple_switch
 	|| maze[player_l+1][player_c] == gold) )
 	{ 
 		++player_l;
@@ -337,6 +340,7 @@ void player_left() {
 	|| maze[player_l][player_c-1] == green
 	|| maze[player_l][player_c-1] == red
 	|| maze[player_l][player_c-1] == purple
+	|| maze[player_l][player_c-1] == purple_switch
 	|| maze[player_l][player_c-1] == gold) )
 	{
 		--player_c;
@@ -351,6 +355,7 @@ void player_right() {
 	|| maze[player_l][player_c+1] == green
 	|| maze[player_l][player_c+1] == red
 	|| maze[player_l][player_c+1] == purple
+	|| maze[player_l][player_c+1] == purple_switch
 	|| maze[player_l][player_c+1] == gold) )
 	{
 		++player_c;
