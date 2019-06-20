@@ -18,13 +18,41 @@ void loop()
 {
 
 }
-```  
-compilá-lo utilizando o script comp.sh  
+```
+E compilá-lo utilizando o script comp.sh  
 ```
 ./comp.sh exemplo.cpp exemplo
 ```
-O simulador possui uma classe Adafruit_NeoPixel com a mesma sintaxe da biblioteca para arduino, além de algumas definições de funções padrão do arduino como pinMode, digitalWrite e digitalRead.  
 
+O simulador possui uma classe Adafruit_NeoPixel com a mesma sintaxe da biblioteca para arduino, além de algumas definições de funções padrão do arduino como pinMode, digitalWrite e digitalRead.  
+Um exemplo de um programa para o simulador é:
+
+```
+#include "fx.cpp"
+
+#define LED_PIN 6
+#define LED_COUNT 144
+
+
+Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+
+void setup()
+{
+	strip.begin();
+	strip.show();
+}
+
+void loop()
+{
+	strip.clear();
+	for(int i = 0; i < LED_COUNT; i++)
+	{
+		strip.setPixelColor(i, 255, 0, 0);
+		strip.show();
+		delay(100);
+	}
+}
+```
 O simulador utiliza os seguintes arquivos:
 
 * fx.cpp		- Gerencia o grid e a thread de efeitos
