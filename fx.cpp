@@ -184,11 +184,30 @@ void init_pins() {
 	}
 }
 
+void init_grid()
+{
+	FILE *f;
+	f = fopen("grid_dim.config", "r");
+	
+	int lines, cols;
+	if(f != NULL)
+	{
+		if(fscanf(f, "%dx%d", &lines, &cols) == 2)
+		{
+			if(lines && cols)
+			{
+				MAT_LINES_FX = lines;
+				MAT_COLS_FX  = cols;
+			}
+		}
+	}
+}
+
 int main (int argc, char *argv[]) {
 	
 	
 	init_pins();
-	
+	init_grid();
 	setup();
 	orthoX = 10 * MAT_COLS_FX;
 	orthoY = 10 * MAT_LINES_FX;
@@ -247,10 +266,10 @@ class Adafruit_NeoPixel {
 
 	public :
 	
-		Adafruit_NeoPixel() { LED_COUNT_FX = 144; MAT_LINES_FX = 12; MAT_COLS_FX = 12;}
+		Adafruit_NeoPixel() { /* LED_COUNT_FX = 144; MAT_LINES_FX = 12; MAT_COLS_FX = 12; */}
 	
 		Adafruit_NeoPixel(int led_count, int led_pin, int garbage) {
-			int t_lines;
+		/*	int t_lines;
 			int t_cols;
 			int closest = 0x7FFFFFFF;
 			MAT_LINES_FX = 12;
@@ -267,6 +286,7 @@ class Adafruit_NeoPixel {
 					closest = abs(t_lines - t_cols);
 				}
 			}
+		*/
 		}
 	
 		Adafruit_NeoPixel(const Adafruit_NeoPixel &p) {

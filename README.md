@@ -33,7 +33,6 @@ Um exemplo de um programa para o simulador é:
 #define LED_PIN 6
 #define LED_COUNT 144
 
-
 Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 void setup()
@@ -52,12 +51,18 @@ void loop()
 		delay(100);
 	}
 }
+
 ```
+
+O tamanho da mesa é inferido a partir do LED_COUNT, e é considerado que os leds estam com a contagem em zig-zag, com o pixel 0 no canto superior esquerdo da mesa.  
+No momento só é possível utilizar mesas retangulares, e as dimensões da matriz podem ser modificadas no arquivo grid_dim.config \(padrão 12x12\)
+
 O simulador utiliza os seguintes arquivos:
 
 * fx.cpp		- Gerencia o grid e a thread de efeitos
-* digital_input.config	- Permite abstrair caracteres do teclado como pinos de entrada do arduino
 * comp.sh		- Script que facilita a compilação do código escrito para o simulador
+* grid_dim.config - Especifica as dimensões da matriz de NeoPixel
+* digital_input.config	- Permite abstrair caracteres do teclado como pinos de entrada do arduino
 
 E depende da biblioteca 
 
