@@ -1,9 +1,0 @@
-loop.cpp 	- Função que fica em loop para criar o efeito.
-		  "imita" sintaxe do arduino
-fx.cpp   	- Gerencia o grid e a thread de efeitos
-
-digital_input.config - Permite abstrair caracteres do teclado como pinos de entrada do arduino
-
-Dependências: 
-
-	freeglut3-dev
