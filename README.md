@@ -6,7 +6,7 @@ Simulador com o objetivo de facilitar a prototipação de efeitos e jogos para m
 
 Para utilizar o simulador basta criar um arquivo exemplo.cpp com a cara:  
 ```
-\#include "fx.cpp"
+#include "fx.cpp"
 
 void setup()
 {
