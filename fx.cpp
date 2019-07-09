@@ -222,7 +222,9 @@ int main (int argc, char *argv[]) {
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(screenW, screenH);
 	glutInitWindowPosition(10,10);
-	glutCreateWindow("SpecialFX");
+	char title[500];
+	sprintf(title, "Mesa %dx%d", MAT_LINES_FX, MAT_COLS_FX);
+	glutCreateWindow(title);
 	
 	glMatrixMode(GL_PROJECTION);
 	glViewport (0, 0, orthoX, orthoY);
